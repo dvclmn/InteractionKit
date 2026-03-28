@@ -14,10 +14,11 @@ let package = Package(
         "InteractionPrimitives",
         "GestureKit",
         "LilyPad",
-      ], )
+      ],
+    )
   ],
   dependencies: [
-    .package(url: "https://github.com/dvclmn/BaseMacros", branch: "main"),
+    .package(url: "https://github.com/dvclmn/BaseMacros", branch: "main")
   ],
   targets: [
     .target(

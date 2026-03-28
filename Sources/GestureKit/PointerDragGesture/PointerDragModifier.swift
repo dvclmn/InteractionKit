@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import InteractionPrimitives
 
 /// Callback receiving the drag payload and interaction phase.
 public typealias DragEventUpdate = (PointerDragPayload?, InteractionPhase) -> Void

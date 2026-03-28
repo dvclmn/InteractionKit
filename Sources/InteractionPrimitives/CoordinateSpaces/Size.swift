@@ -33,16 +33,16 @@ extension Size {
   public var toRectZeroOrigin: Rect<Space> {
     Rect<Space>(
       origin: .zero,
-      size: self
+      size: self,
     )
   }
 
-  public var toCGRectZeroOrigin: CGRect { .init(.zero, cgSize) }
+  public var toCGRectZeroOrigin: CGRect { .init(origin: .zero, size: cgSize) }
 }
 
 extension CGSize {
   package var screenSize: Size<ScreenSpace> { .init(fromCGSize: self) }
-  
+
   package init<Space>(fromSize size: Size<Space>) {
     self.init(width: size.width, height: size.height)
   }
@@ -54,12 +54,12 @@ public func += <Space>(lhs: inout Size<Space>, rhs: Size<Space>) {
 }
 public func + <Space>(
   lhs: Size<Space>,
-  rhs: Size<Space>
-) -> Size<Space>{
+  rhs: Size<Space>,
+) -> Size<Space> {
   Size<Space>(
     width: lhs.width + rhs.width,
-    height: lhs.height + rhs.height
+    height: lhs.height + rhs.height,
   )
-//  lhs.width += rhs.width
-//  lhs.height += rhs.height
+  //  lhs.width += rhs.width
+  //  lhs.height += rhs.height
 }
