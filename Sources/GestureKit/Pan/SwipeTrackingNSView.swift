@@ -7,6 +7,7 @@
 
 #if canImport(AppKit)
 import AppKit
+import InteractionPrimitives
 //import BasePrimitives
 
 /// Swipe == Pan — avoiding using word Pan directly, as I keep getting

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import InteractionPrimitives
 
 /// Return a replacement zoom value, or `nil` to accept the gesture's proposal.
 /// It may be that later I use this when doing more complex processing on the zoom

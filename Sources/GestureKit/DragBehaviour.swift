@@ -12,7 +12,7 @@ import SwiftUI
 /// - ``marquee``: A transient selection rectangle, cleared when the drag ends.
 /// - ``continuous(axes:)``: An accumulated offset that persists across drags.
 /// - ``none``: No drag response.
-public enum DragBehavior: Equatable, Sendable, Hashable {
+public enum DragBehavior: Equatable, Sendable {
 
   /// A transient selection rectangle drawn from the drag origin to the current
   /// pointer position. All state is cleared on drag end.
@@ -24,7 +24,8 @@ public enum DragBehavior: Equatable, Sendable, Hashable {
   ///
   /// Each new drag begins from the offset committed by the previous drag, so
   /// movement compounds over time. Pass a ``GridAxis/Set`` to lock to an axis.
-  case continuous(axes: GridAxis.Set)
+  case continuous(axes: Axis.Set)
+//  case continuous(axes: GridAxis.Set)
 
   /// Drag gesture is inactive; no callbacks or state changes are produced.
   case none
@@ -38,13 +39,13 @@ extension DragBehavior {
   public var name: String {
     switch self {
       case .marquee: "Marquee"
-      case .continuous(let axes): "Continuous (\(axes.name))"
+      case .continuous(let axes): "Continuous (\(axes))"
       case .none: "None"
     }
   }
 
   /// The axis constraint for continuous drags. Returns `.all` for other modes.
-  public var axes: GridAxis.Set {
+  public var axes: Axis.Set {
     if case .continuous(let axes) = self { return axes }
     return .all
   }
@@ -57,4 +58,8 @@ extension DragBehavior {
 
   /// Whether drag gestures are permitted. `false` only for `.none`.
   public var isEnabled: Bool { self != .none }
+}
+
+extension Axis.Set {
+  static var all: Axis.Set { [.horizontal, .vertical] }
 }

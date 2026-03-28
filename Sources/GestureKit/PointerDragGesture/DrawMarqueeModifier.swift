@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct DrawMarqueeModifier: ViewModifier {
-  @Environment(\.isDebugMode) var isDebugMode
+  //  @Environment(\.isDebugMode) var isDebugMode
   let rect: CGRect?
   let isEnabled: Bool
 
@@ -18,13 +18,13 @@ public struct DrawMarqueeModifier: ViewModifier {
         if isEnabled, let rect {
           ZStack {
             Canvas { context, size in
-              context.stroke(rect.path, with: .color(.pink))
+              context.stroke(Path(rect), with: .color(.pink))
             }
             .allowsHitTesting(false)
-            .addDebugText(
-              "Origin: \(rect.origin.displayString(.concise))",
-              isEnabled: isDebugMode
-            )
+            //            .addDebugText(
+            //              "Origin: \(rect.origin.displayString(.concise))",
+            //              isEnabled: isDebugMode
+            //            )
           }
         }  // END rect check, is enabled
       }  // END overlay
@@ -34,7 +34,7 @@ public struct DrawMarqueeModifier: ViewModifier {
 extension View {
   public func drawMarqueeRect(
     rect: CGRect?,
-    isEnabled: Bool
+    isEnabled: Bool,
   ) -> some View {
     self.modifier(DrawMarqueeModifier(rect: rect, isEnabled: isEnabled))
   }

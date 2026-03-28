@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 17/3/2026.
 //
 
+import InteractionPrimitives
+
 /// Note: This size comes as deltas, which will need to be accrued
 /// Modifiers == 'modifiers held'
 public typealias SwipeOutput = (SwipeEvent) -> Void

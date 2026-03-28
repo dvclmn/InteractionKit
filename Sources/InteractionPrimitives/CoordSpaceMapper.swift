@@ -36,8 +36,9 @@ extension CoordinateSpaceMapper {
   //  private var canvasSize: Size<CanvasSpace> { geometry.canvasSize }
   //  private var artworkFrame: Rect<ScreenSpace> { geometry.artworkFrameInViewport }
   private var zoomClamped: CGFloat {
-    guard zoom.isFinite && zoom > 0 else { return 1 }
-    //    guard transform.scale.isFiniteAndGreaterThanZero else { return 1 }
+    //    guard zoom.isFinite && zoom > 0 else { return 1 }
+    guard zoom.isFiniteAndGreaterThanZero else { return 1 }
+    //        guard transform.scale.isFiniteAndGreaterThanZero else { return 1 }
     return zoom.clampedIfNeeded(to: zoomRange)
     //    return transform.scale.clampedIfNeeded(to: zoomRange)
   }
@@ -73,23 +74,4 @@ extension CoordinateSpaceMapper {
     canvasXRange.contains(canvasPoint.x)
       && canvasYRange.contains(canvasPoint.y)
   }
-}
-
-extension Double {
-  func clampedIfNeeded(to range: ClosedRange<Self>?) -> CGFloat {
-    guard let range else { return self }
-    return clamped(to: range)
-    //    return isFinite ? self.clamped(to: range) : self
-  }
-
-  public func clamped(to range: ClosedRange<Self>) -> Self {
-    let lower = range.lowerBound
-    let upper = range.upperBound
-
-    guard lower < upper else { return self }
-    return Swift.min(upper, Swift.max(lower, self))
-
-    //    return clamped(range.lowerBound, range.upperBound)
-  }
-
 }
