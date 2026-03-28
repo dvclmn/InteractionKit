@@ -6,7 +6,7 @@
 //
 
 import AppKit
-import BasePrimitives
+//import BasePrimitives
 
 /// The underlying AppKit NSView that captures raw trackpad touches
 public class TrackpadTouchesNSView: NSView {

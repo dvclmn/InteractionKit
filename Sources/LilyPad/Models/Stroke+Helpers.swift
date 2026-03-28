@@ -7,7 +7,7 @@
 
 //import VectorKit
 import Foundation
-import BasePrimitives
+//import BasePrimitives
 
 extension DrawingData {
   static func makeStrokes(

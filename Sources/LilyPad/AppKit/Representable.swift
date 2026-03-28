@@ -7,7 +7,7 @@
 
 #if canImport(AppKit)
 import SwiftUI
-import BasePrimitives
+//import BasePrimitives
 
 public typealias TouchesUpdate = (Set<TouchPoint>) -> Void
 public typealias PressureUpdate = (CGFloat) -> Void
