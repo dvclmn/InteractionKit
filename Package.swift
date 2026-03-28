@@ -13,11 +13,11 @@ let package = Package(
       targets: ["GestureKit"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/dvclmn/BaseHelpers", branch: "main"),
+//    .package(url: "https://github.com/dvclmn/BaseHelpers", branch: "main"),
 //    .package(url: "https://github.com/dvclmn/BaseMacros", branch: "main"),
 //    .package(url: "https://github.com/dvclmn/BaseComponents", branch: "main"),
-    .package(url: "https://github.com/gohanlon/swift-memberwise-init-macro.git", from: "0.5.1"),
-    .package(url: "https://github.com/pointfreeco/swift-identified-collections.git", branch: "main"),
+//    .package(url: "https://github.com/gohanlon/swift-memberwise-init-macro.git", from: "0.5.1"),
+//    .package(url: "https://github.com/pointfreeco/swift-identified-collections.git", branch: "main"),
     
     
   ],
@@ -26,10 +26,10 @@ let package = Package(
       name: "GestureKit",
       dependencies: [
 //        .product(name: "BaseMacros", package: "BaseMacros"),
-        .product(name: "BaseHelpers", package: "BaseHelpers"),
+//        .product(name: "BaseHelpers", package: "BaseHelpers"),
 //        .product(name: "BaseComponents", package: "BaseComponents"),
-        .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
-        .product(name: "IdentifiedCollections", package: "swift-identified-collections")
+//        .product(name: "MemberwiseInit", package: "swift-memberwise-init-macro"),
+//        .product(name: "IdentifiedCollections", package: "swift-identified-collections")
       ]
     ),
     .testTarget(
