@@ -17,17 +17,14 @@ let package = Package(
       ], )
   ],
   dependencies: [
-    //    .package(url: "https://github.com/dvclmn/BaseHelpers", branch: "main"),
-    //    .package(url: "https://github.com/dvclmn/BaseMacros", branch: "main"),
-    //    .package(url: "https://github.com/dvclmn/BaseComponents", branch: "main"),
-    //    .package(url: "https://github.com/gohanlon/swift-memberwise-init-macro.git", from: "0.5.1"),
-    //    .package(url: "https://github.com/pointfreeco/swift-identified-collections.git", branch: "main"),
-
+    .package(url: "https://github.com/dvclmn/BaseMacros", branch: "main"),
   ],
   targets: [
     .target(
       name: "InteractionPrimitives",
-      dependencies: [],
+      dependencies: [
+        .product(name: "BaseMacros", package: "BaseMacros")
+      ],
     ),
     .target(
       name: "GestureKit",
