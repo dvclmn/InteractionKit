@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-public typealias Strokes = [Stroke: StrokeConfig]
+//public typealias Strokes = [Stroke: StrokeConfig]
 
 public struct DrawingData: Codable, Sendable {
   public var active: Stroke?
   public var phase: InteractionPhase = .none
-  public var strokes: Strokes = [:]
+  public var strokes: [Stroke] = []
 
   enum CodingKeys: CodingKey {
     case strokes
@@ -29,3 +29,4 @@ extension DrawingData {
   }
   public var strokeCount: Int { strokes.count }
 }
+

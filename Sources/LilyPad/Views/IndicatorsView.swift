@@ -5,23 +5,24 @@
 //  Created by Dave Coleman on 7/5/2025.
 //
 
-import BasePrimitives
+//import BasePrimitives
+import InteractionPrimitives
 import SwiftUI
 
 public struct TouchIndicatorsView: View {
 
   let mappedTouches: [TouchPoint]
-  let mappingStrategy: ContentSizeMode
+//  let mappingStrategy: ContentSizeMode
   let containerSize: CGSize
   let indicatorDiameter: CGFloat = 40
 
   public init(
     mappedTouches: [TouchPoint],
-    mappingStrategy: ContentSizeMode,
+//    mappingStrategy: ContentSizeMode,
     containerSize: CGSize,
   ) {
     self.mappedTouches = mappedTouches
-    self.mappingStrategy = mappingStrategy
+//    self.mappingStrategy = mappingStrategy
     self.containerSize = containerSize
   }
 
@@ -49,23 +50,45 @@ public struct TouchIndicatorsView: View {
       )
       .position(containerSize.midpoint)
     }
-
   }
 }
 
 extension TouchIndicatorsView {
 
   private var mappingSize: CGSize {
-    mappingStrategy.size(
-      for: containerSize,
-      aspectRatio: CGSize.trackpadAspectRatio,
-      insets: .zero
+//  private func mappingSize(_ containerSize: CGSize) -> CGSize {
+    
+//    let insets: EdgeInsets = .init()
+    let sizeWithInsets: CGSize = containerSize
+    let aspectRatio: CGFloat = 1.0
+//    let sizeWithInsets: CGSize = containerSize.inset(by: insets)
+    
+    // Scale uniformly to fit within container (preserve aspect ratio)
+    // aspectRatio is defined as height/width
+    let widthBased = CGSize(
+      width: sizeWithInsets.width,
+      height: sizeWithInsets.width * aspectRatio
     )
+    guard widthBased.height <= sizeWithInsets.height else {
+      return CGSize(
+        width: sizeWithInsets.height / aspectRatio,
+        height: sizeWithInsets.height
+      )
+    }
+    return widthBased
+
+    
+//    mappingStrategy.size(
+//      for: containerSize,
+//      aspectRatio: CGSize.trackpadAspectRatio,
+//      insets: .zero
+//    )
   }
 
   @ViewBuilder
   func TouchLabel(_ touch: TouchPoint) -> some View {
-    Text(touch.position.displayString(.wholeNumber))
+    Text(touch.position.debugDescription)
+//    Text(touch.position.displayString(.wholeNumber))
       .monospaced()
       .font(.caption2)
       .fixedSize()
