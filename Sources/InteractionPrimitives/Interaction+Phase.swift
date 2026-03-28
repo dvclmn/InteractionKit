@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppKit
 
 public enum InteractionPhase: String, Sendable, Codable {
   case began
