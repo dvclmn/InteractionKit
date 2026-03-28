@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import InteractionPrimitives
 
 //public typealias Strokes = [Stroke: StrokeConfig]
 
@@ -23,9 +24,12 @@ public struct DrawingData: Codable, Sendable {
 
 extension DrawingData {
   public var pointCount: Int {
-    strokes.reduce(into: 0) { partialResult, dict in
-      partialResult += dict.key.points.count
+    strokes.reduce(into: 0) { partialResult, stroke in
+      partialResult += stroke.points.count
     }
+//    strokes.reduce(into: 0) { partialResult, dict in
+//      partialResult += dict.key.points.count
+//    }
   }
   public var strokeCount: Int { strokes.count }
 }

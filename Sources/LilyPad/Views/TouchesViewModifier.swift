@@ -12,7 +12,7 @@ public struct TrackpadTouchesModifier: ViewModifier {
   @State private var localTouches: Set<TouchPoint> = []
 
   let isEnabled: Bool
-//  let mapStrategy: ContentSizeMode
+  //  let mapStrategy: ContentSizeMode
   let shouldShowIndicators: Bool
   let didUpdateTouches: TouchesUpdate
   let didUpdatePressure: PressureUpdate
@@ -22,8 +22,8 @@ public struct TrackpadTouchesModifier: ViewModifier {
       content
       if isEnabled && shouldShowIndicators {
         TouchIndicatorsView(
-          mappedTouches: localTouches.toArray,
-//          mappingStrategy: mapStrategy,
+          mappedTouches: Array(localTouches),
+          //          mappingStrategy: mapStrategy,
           containerSize: proxy.size,
         )
       }
@@ -43,15 +43,15 @@ extension View {
 
   public func touches(
     isEnabled: Bool = true,
-//    mapStrategy: ContentSizeMode,
+    //    mapStrategy: ContentSizeMode,
     showIndicators: Bool = true,
     didUpdateTouches: @escaping TouchesUpdate,
-    didUpdatePressure: @escaping PressureUpdate = { _ in }
+    didUpdatePressure: @escaping PressureUpdate = { _ in },
   ) -> some View {
     self.modifier(
       TrackpadTouchesModifier(
         isEnabled: isEnabled,
-//        mapStrategy: mapStrategy,
+        //        mapStrategy: mapStrategy,
         shouldShowIndicators: showIndicators,
         didUpdateTouches: didUpdateTouches,
         didUpdatePressure: didUpdatePressure,

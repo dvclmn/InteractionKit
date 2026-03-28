@@ -10,18 +10,20 @@ import Foundation
 //import BasePrimitives
 
 extension DrawingData {
-  static func makeStrokes(
-    from strokes: [Stroke]
-  ) -> Strokes {
-    Dictionary(uniqueKeysWithValues: strokes.map { stroke in
-      (stroke, StrokeConfig())
-    })
-  }
+  
+//  static func makeStrokes(
+//    from strokes: [Stroke]
+//  ) -> Strokes {
+//    Dictionary(uniqueKeysWithValues: strokes.map { stroke in
+//      (stroke, StrokeConfig())
+//    })
+//  }
 
   public mutating func addStrokes(_ strokes: [Stroke]) {
-    let new = Self.makeStrokes(from: strokes)
-    self.strokes.merge(new) { _, new in
-      new
-    }
+    self.strokes.append(contentsOf: strokes)
+//    let new = Self.makeStrokes(from: strokes)
+//    self.strokes.merge(new) { _, new in
+//      new
+//    }
   }
 }
