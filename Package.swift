@@ -1,16 +1,16 @@
-// swift-tools-version: 6.1
+// swift-tools-version: 6.3
 
 import PackageDescription
 
 let package = Package(
-  name: "LilyPad",
+  name: "GestureKit",
   platforms: [
     .macOS("14.0")
   ],
   products: [
     .library(
-      name: "LilyPad",
-      targets: ["LilyPad"]),
+      name: "GestureKit",
+      targets: ["GestureKit"]),
   ],
   dependencies: [
     .package(url: "https://github.com/dvclmn/BaseHelpers", branch: "main"),
@@ -23,7 +23,7 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "LilyPad",
+      name: "GestureKit",
       dependencies: [
 //        .product(name: "BaseMacros", package: "BaseMacros"),
         .product(name: "BaseHelpers", package: "BaseHelpers"),
@@ -33,8 +33,8 @@ let package = Package(
       ]
     ),
     .testTarget(
-      name: "LilyPadTests",
-      dependencies: ["LilyPad"]
+      name: "GestureKitTests",
+      dependencies: ["GestureKit"]
     ),
   ]
 )
