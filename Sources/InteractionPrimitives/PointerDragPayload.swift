@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import InteractionPrimitives
 
 /// This is an improvement over the previous CGRect, which was
 /// trying to wear too many hats
@@ -41,7 +40,7 @@ extension PointerDragPayload {
   //  }
   //  private var formatPreset: FloatDisplayPreset { .concise }
 
-  var boundingRect: Rect<ScreenSpace>? {
+  public var boundingRect: Rect<ScreenSpace>? {
     switch self {
       case .delta: nil
       case .rect(let from, let current): Rect<ScreenSpace>(from: from, to: current)

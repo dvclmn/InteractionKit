@@ -57,7 +57,7 @@ extension Point {
 }
 
 extension CGPoint {
-  package var screenPoint: Point<ScreenSpace> { .init(fromPoint: self) }
+  public var screenPoint: Point<ScreenSpace> { .init(fromPoint: self) }
 }
 
 // MARK: - Arithmetic

@@ -13,6 +13,7 @@ let package = Package(
       targets: [
         "GestureKit",
         "InteractionPrimitives",
+        "GeometryPrimitives",
         "LilyPad",
       ],
     )
@@ -25,7 +26,8 @@ let package = Package(
     .target(
       name: "InteractionPrimitives",
       dependencies: [
-        .product(name: "BaseMacros", package: "BaseMacros")
+        .product(name: "BaseMacros", package: "BaseMacros"),
+        .module(.geometryPrimitives)
       ],
     ),
     .target(
@@ -33,6 +35,9 @@ let package = Package(
       dependencies: [
         .module(.interactionPrimitives)
       ],
+    ),
+    .target(
+      name: "GeometryPrimitives",
     ),
     .target(
       name: "LilyPad",
@@ -48,18 +53,20 @@ let package = Package(
 )
 
 extension Target.Dependency {
-  static func module(_ baseModule: BaseModule) -> Self {
+  static func module(_ baseModule: InternalModule) -> Self {
     .target(name: baseModule.name)
   }
 }
 extension String { static let baseHelpers = "BaseHelpers" }
 
-enum BaseModule {
+enum InternalModule {
   case interactionPrimitives
+  case geometryPrimitives
 
   var name: String {
     switch self {
       case .interactionPrimitives: ("InteractionPrimitives")
+      case .geometryPrimitives: ("GeometryPrimitives")
     }
   }
 }

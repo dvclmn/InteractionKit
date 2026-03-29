@@ -1,0 +1,97 @@
+//
+//  HitAreaLayout.swift
+//  InteractionKit
+//
+//  Created by Dave Coleman on 29/3/2026.
+//
+
+import SwiftUI
+import GeometryPrimitives
+
+public struct HitAreaLayout {
+  let controlPoint: UnitPoint
+  let thickness: CGFloat
+  let offset: RectBoundaryPlacement
+  let shouldIncludeCorners: Bool
+
+  public init(
+    controlPoint: UnitPoint,
+    thickness: CGFloat,
+    offset: RectBoundaryPlacement,
+    shouldIncludeCorners: Bool,
+  ) {
+    self.controlPoint = controlPoint
+    self.thickness = thickness
+    self.offset = offset
+    self.shouldIncludeCorners = shouldIncludeCorners
+  }
+}
+
+extension HitAreaLayout {
+
+  public var alignment: Alignment {
+    controlPoint.toAlignment
+  }
+
+  /// Important: Remember this is for individual Hit Areas.
+  /// This does not represent the overall size or frame of the
+  /// Resizable View.
+  public var fillSizeMax: CGSize {
+    switch controlPoint.pointType {
+      case .horizontalEdge:
+        return CGSize(width: .infinity, height: thickness)
+      case .verticalEdge:
+        return CGSize(width: thickness, height: .infinity)
+      case .corner:
+        return shouldIncludeCorners ? CGSize(fromLength: thickness) : .zero
+      case .centre:
+        return .zero
+
+    }
+  }
+
+  /// Padding created to accomodate corners if present
+  public var edgePadding: EdgeInsets {
+
+    let inset = thickness
+
+    let padding: EdgeInsets =
+      switch (offset, shouldIncludeCorners) {
+        case (.outside, _): .zero
+        case (_, false): .zero
+        case (.inside, true): controlPoint.hitAreaPadding(inset)
+        case (.centre, true): controlPoint.hitAreaPadding(inset / 2)
+
+      }
+
+    return padding
+  }
+
+  public var rectOffset: CGSize {
+
+    let offsetAmount: CGFloat =
+      switch offset {
+        case .inside: .zero
+        case .outside: -thickness
+        case .centre: -thickness / 2
+      }
+    return controlPoint.offset(by: offsetAmount)
+  }
+
+}
+
+extension UnitPoint {
+  func hitAreaPadding(_ amount: CGFloat) -> EdgeInsets {
+    fatalError("Need to clarify logic here, for axis/convention")
+    //    switch self {
+    //      case .top, .bottom:
+    //        return EdgeInsets(horizontal: amount)
+    //
+    //      case .leading, .trailing:
+    //        return EdgeInsets(top: amount, bottom: amount)
+    //
+    //      default:
+    //        return .zero
+    //    }
+  }
+}
