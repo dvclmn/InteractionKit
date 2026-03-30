@@ -22,6 +22,7 @@ extension UnitPoint {
     offset(dx: amount, dy: amount)
   }
 
+  
   public func offset(by size: CGSize, mapping: AxisMapping = .default) -> CGSize {
     offset(
       dx: size.value(along: .horizontal, mapping: mapping),

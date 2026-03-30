@@ -18,16 +18,7 @@ extension UnitPoint: @retroactive Identifiable {
 }
 
 extension UnitPoint {
-  
-  public func toCGPoint(in size: CGSize) -> CGPoint {
-    let result = CGPoint(
-      x: self.x * size.width,
-      y: self.y * size.height,
-    )
-    return result
-  }
 
-  
   /// This is just for visual debugging
   public var debugColour: Color {
     switch self {
@@ -43,7 +34,6 @@ extension UnitPoint {
       default: Color.gray
     }
   }
-
 
   public var name: String {
     switch self {
@@ -86,7 +76,7 @@ extension UnitPoint {
   public func toCGPoint(in size: CGSize) -> CGPoint {
     let result = CGPoint(
       x: self.x * size.width,
-      y: self.y * size.height
+      y: self.y * size.height,
     )
     return result
   }
@@ -95,7 +85,7 @@ extension UnitPoint {
   public init(
     point: CGPoint,
     in size: CGSize,
-    clamped: Bool = true
+    clamped: Bool = true,
   ) {
     let unitX = size.width.isZero ? 0 : point.x / size.width
     let unitY = size.height.isZero ? 0 : point.y / size.height
@@ -109,7 +99,7 @@ extension UnitPoint {
   public static func location(
     for point: CGPoint,
     in size: CGSize,
-    clamped: Bool = true
+    clamped: Bool = true,
   ) -> UnitPoint {
     UnitPoint(point: point, in: size, clamped: clamped)
   }
