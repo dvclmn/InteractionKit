@@ -31,28 +31,28 @@ extension UnitPoint {
     }
   }
 
-  public var toCompatPointerStyle: PointerStyleCompatible? {
-    guard
-      let resizePos: FrameResizePositionCompatible =
-        switch self {
-          case .topLeading: .topLeading
-          case .topTrailing: .topTrailing
-          case .bottomLeading: .bottomLeading
-          case .bottomTrailing: .bottomTrailing
-          case .top: .top
-          case .trailing: .trailing
-          case .leading: .leading
-          case .bottom: .bottom
-          default: nil
-        }
-    else { return nil }
-
-    let style = PointerStyleCompatible.frameResize(
-      position: resizePos,
-      directions: .all,
-    )
-    return style
-  }
+//  public var toCompatPointerStyle: PointerStyleCompatible? {
+//    guard
+//      let resizePos: FrameResizePositionCompatible =
+//        switch self {
+//          case .topLeading: .topLeading
+//          case .topTrailing: .topTrailing
+//          case .bottomLeading: .bottomLeading
+//          case .bottomTrailing: .bottomTrailing
+//          case .top: .top
+//          case .trailing: .trailing
+//          case .leading: .leading
+//          case .bottom: .bottom
+//          default: nil
+//        }
+//    else { return nil }
+//
+//    let style = PointerStyleCompatible.frameResize(
+//      position: resizePos,
+//      directions: .all,
+//    )
+//    return style
+//  }
   
   /// This is just for visual debugging
   public var debugColour: Color {
