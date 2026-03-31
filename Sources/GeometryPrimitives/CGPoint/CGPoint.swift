@@ -7,11 +7,7 @@
 
 import SwiftUI
 
-extension CGSize {
-  package var midpoint: CGPoint {
-    return CGPoint(x: width / 2, y: height / 2)
-  }
-  
+extension CGPoint {
   public func isNearUnitPoint(
     _ unitPoint: UnitPoint,
     in size: CGSize,

@@ -138,4 +138,14 @@ extension BinaryFloatingPoint {
     return transformed.denormalised(in: range)
   }
 
+  /// Where self is the curve
+  func slowResponse(_ x: Self) -> Self {
+    Self(pow(CGFloat(x), CGFloat(self)))
+  }
+  
+  /// Where self is the curve
+  func fastResponse(_ x: Self) -> Self {
+    Self(pow(CGFloat(x), CGFloat(1 / self)))
+  }
+
 }
