@@ -21,7 +21,7 @@ public struct TouchPoint: Identifiable, Hashable, Sendable {
 
   /// Stable identity derived from `NSTouch.identity`, consistent across
   /// the full lifecycle of a single finger contact (began → moved → ended).
-  public let id: Int
+  public let id: TouchID
 
   /// Stable ordering index (0-based) assigned when this finger first touched
   /// down. Finger ordering is determined by arrival time — the first finger
@@ -45,13 +45,13 @@ public struct TouchPoint: Identifiable, Hashable, Sendable {
   public let isResting: Bool
 
   public init(
-    id: Int,
+    id: TouchID,
     touchOrder: Int,
     position: CGPoint,
     velocity: CGVector,
     magnitude: CGFloat,
     phase: InteractionPhase,
-    isResting: Bool = false
+    isResting: Bool = false,
   ) {
     self.id = id
     self.touchOrder = touchOrder
@@ -61,15 +61,4 @@ public struct TouchPoint: Identifiable, Hashable, Sendable {
     self.phase = phase
     self.isResting = isResting
   }
-}
-
-/// Internal bookkeeping for velocity smoothing between frames.
-struct TouchState {
-  var lastPosition: CGPoint
-  var lastTimestamp: TimeInterval
-  var smoothedVelocity: CGVector = .zero
-
-  /// The time this touch first appeared (`.began` phase).
-  /// Used to assign stable `touchOrder` across all active touches.
-  var firstSeen: TimeInterval
 }

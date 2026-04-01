@@ -35,7 +35,7 @@ class TrackpadTouchManager {
   }
 
   /// Per-touch bookkeeping, keyed by touch identity hash.
-  private var history: [Int: TouchState] = [:]
+  private var history: [TouchID: TouchState] = [:]
 
   /// Processes a set of raw `NSTouch` values from a single event into an
   /// ordered array of ``TouchPoint`` values.
@@ -45,17 +45,17 @@ class TrackpadTouchManager {
   func processTouches(
     _ nsTouches: Set<NSTouch>,
     timestamp: TimeInterval,
-    in space: CoordinateSpace
+    in space: CoordinateSpace,
   ) -> [TouchPoint] {
 
     var results: [TouchPoint] = []
     results.reserveCapacity(nsTouches.count)
 
     for touch in nsTouches {
-      let id = touch.identity.hash
+      let id = TouchID(rawValue: touch.identity.hash)
       let position = position(for: touch, in: space)
 
-      // Calculate smoothed velocity from history
+      /// Calculate smoothed velocity from history
       var velocity = CGVector.zero
       if let previous = history[id] {
         let dt = CGFloat(timestamp - previous.lastTimestamp)
@@ -65,12 +65,12 @@ class TrackpadTouchManager {
             prevPosition: previous.lastPosition,
             currentPosition: position,
             factor: smoothingFactor,
-            dt: dt
+            dt: dt,
           )
         }
       }
 
-      // Determine the first-seen time for ordering
+      /// Determine the first-seen time for ordering
       let firstSeen: TimeInterval
       if let existing = history[id] {
         firstSeen = existing.firstSeen
@@ -78,7 +78,7 @@ class TrackpadTouchManager {
         firstSeen = timestamp
       }
 
-      // Update or clean up history
+      /// Update or clean up history
       if touch.phase == .ended || touch.phase == .cancelled {
         history.removeValue(forKey: id)
       } else {
@@ -86,24 +86,25 @@ class TrackpadTouchManager {
           lastPosition: position,
           lastTimestamp: timestamp,
           smoothedVelocity: velocity,
-          firstSeen: firstSeen
+          firstSeen: firstSeen,
         )
       }
 
       let magnitude = sqrt(velocity.dx * velocity.dx + velocity.dy * velocity.dy)
 
-      results.append(TouchPoint(
-        id: id,
-        touchOrder: 0, // placeholder — assigned after sorting
-        position: position,
-        velocity: velocity,
-        magnitude: magnitude,
-        phase: InteractionPhase(from: touch.phase),
-        isResting: touch.isResting
-      ))
+      results.append(
+        TouchPoint(
+          id: id,
+          touchOrder: 0,  // placeholder — assigned after sorting
+          position: position,
+          velocity: velocity,
+          magnitude: magnitude,
+          phase: InteractionPhase(from: touch.phase),
+          isResting: touch.isResting,
+        ))
     }
 
-    // Sort by first-seen time (earliest first), then assign stable order indices
+    /// Sort by first-seen time (earliest first), then assign stable order indices
     results.sort { lhs, rhs in
       let lhsTime = history[lhs.id]?.firstSeen ?? timestamp
       let rhsTime = history[rhs.id]?.firstSeen ?? timestamp
@@ -118,14 +119,14 @@ class TrackpadTouchManager {
         velocity: point.velocity,
         magnitude: point.magnitude,
         phase: point.phase,
-        isResting: point.isResting
+        isResting: point.isResting,
       )
     }
   }
 
   private func position(
     for touch: NSTouch,
-    in space: CoordinateSpace
+    in space: CoordinateSpace,
   ) -> CGPoint {
     let normalised = touch.normalizedPosition
     return switch space {
@@ -134,7 +135,7 @@ class TrackpadTouchManager {
       case .view(let size):
         CGPoint(
           x: size.width * normalised.x,
-          y: size.height * (1 - normalised.y)
+          y: size.height * (1 - normalised.y),
         )
     }
   }

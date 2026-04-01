@@ -9,7 +9,7 @@ import SwiftUI
 public class StrokeEngine {
 
   /// Strokes currently being drawn, keyed by touch ID.
-  public private(set) var activeStrokes: [Int: ActiveStroke] = [:]
+  public private(set) var activeStrokes: [TouchID: ActiveStroke] = [:]
 
   /// Strokes that have been completed (finger lifted).
   public private(set) var completedStrokes: [CompletedStroke] = []
@@ -21,9 +21,10 @@ public class StrokeEngine {
   /// cost of resolution. Default is 2 points.
   public var minimumPointDistance: CGFloat = 2.0
 
-  // MARK: - Init
-
   public init() {}
+}
+
+extension StrokeEngine {
 
   // MARK: - Processing
 
@@ -35,17 +36,10 @@ public class StrokeEngine {
   public func processTouches(_ touches: [TouchPoint]) {
     for touch in touches where !touch.isResting {
       switch touch.phase {
-        case .began:
-          beginStroke(for: touch)
-
-        case .changed:
-          continueStroke(for: touch)
-
-        case .ended, .cancelled:
-          finishStroke(for: touch)
-
-        default:
-          break
+        case .began: beginStroke(for: touch)
+        case .changed: continueStroke(for: touch)
+        case .ended, .cancelled: finishStroke(for: touch)
+        default: break
       }
     }
   }
