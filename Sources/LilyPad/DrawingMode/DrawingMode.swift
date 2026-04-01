@@ -164,8 +164,11 @@ extension DrawingMode {
     showCursor()
     restoreCursorPosition()
   }
+}
 
-  // MARK: - App activation
+// MARK: - App activation
+
+extension DrawingMode {
 
   /// When the app loses focus, always disengage pointer control — the user
   /// needs their cursor back to interact with other apps. We don't clear
@@ -175,22 +178,25 @@ extension DrawingMode {
     removeClickMonitor()
     unlockCursor()
     showCursor()
-    // Don't restore position — they may have intentionally clicked elsewhere
+    /// Don't restore position — user may have intentionally clicked elsewhere
   }
 
   /// When the app regains focus, re-engage if drawing mode is still active.
   private func handleAppActivation() {
     guard isActive else { return }
-    // Small delay lets the system finish its activation before we grab the cursor
-    Task { @MainActor [weak self] in
+    /// Small delay lets the system finish its activation before we grab the cursor
+    Task { @MainActor in
       try? await Task.sleep(for: .milliseconds(50))
-      guard let self, self.isActive else { return }
       self.savedCursorPosition = self.screenCursorPosition()
       self.engage()
     }
   }
+}
 
-  // MARK: - Cursor hiding (balanced)
+// MARK: - Cursor Helpers
+extension DrawingMode {
+
+  // MARK: Cursor hiding (balanced)
 
   private func hideCursor() {
     guard !cursorIsHidden else { return }
@@ -204,7 +210,7 @@ extension DrawingMode {
     cursorIsHidden = false
   }
 
-  // MARK: - Cursor locking
+  // MARK: Cursor locking
 
   private func lockCursor() {
     guard !cursorIsLocked else { return }
@@ -218,12 +224,13 @@ extension DrawingMode {
     cursorIsLocked = false
   }
 
-  // MARK: - Cursor position
+  // MARK: Cursor position
 
   private func restoreCursorPosition() {
     guard let position = savedCursorPosition else { return }
-    // CGWarpMouseCursorPosition uses top-left origin; convert from NSEvent's
-    // bottom-left screen coordinates.
+    
+    /// `CGWarpMouseCursorPosition` uses top-left origin; convert from NSEvent's
+    /// bottom-left screen coordinates.
     let screenHeight = NSScreen.main?.frame.height ?? 0
     let flipped = CGPoint(x: position.x, y: screenHeight - position.y)
     CGWarpMouseCursorPosition(flipped)
@@ -234,7 +241,7 @@ extension DrawingMode {
     NSEvent.mouseLocation
   }
 
-  // MARK: - Click suppression
+  // MARK: Click suppression
 
   private func installClickMonitor() {
     guard clickMonitor == nil else { return }
@@ -245,7 +252,7 @@ extension DrawingMode {
         .otherMouseDown, .otherMouseUp,
       ]
     ) { _ in
-      // Returning nil swallows the event
+      /// Returning nil swallows the event
       nil
     }
   }
