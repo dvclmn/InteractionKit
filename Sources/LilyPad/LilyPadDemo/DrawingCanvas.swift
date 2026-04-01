@@ -27,11 +27,11 @@ import SwiftUI
 /// - **Brush textures**: Stamp a brush image along the path instead of
 ///   stroking a geometric path.
 ///
-struct DrawingCanvas: View {
+public struct DrawingCanvas: View {
   let engine: StrokeEngine
 
   /// Base line width. A real brush engine would vary this per-point.
-  var lineWidth: CGFloat = 3.0
+  public var lineWidth: CGFloat = 3.0
 
   /// Colours assigned to fingers by their `touchOrder`.
   private static let fingerColours: [Color] = [
@@ -39,7 +39,7 @@ struct DrawingCanvas: View {
     .red, .yellow, .cyan, .pink, .mint,
   ]
 
-  var body: some View {
+  public var body: some View {
     Canvas { context, _ in
       for stroke in engine.completedStrokes {
         draw(stroke.points, touchOrder: stroke.touchOrder, opacity: 1, in: &context)

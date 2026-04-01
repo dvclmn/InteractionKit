@@ -1,0 +1,274 @@
+//
+//  DrawingMode.swift
+//  LilyPad
+//
+//  Created by Dave Coleman on 2025.
+//
+
+#if canImport(AppKit)
+import AppKit
+import SwiftUI
+
+/// Manages pointer behaviour for absolute-position trackpad drawing.
+///
+/// When drawing mode is active, the system cursor is hidden and locked in
+/// place so it can't drift to another window or screen. Mouse clicks are
+/// suppressed to prevent accidental focus changes. When the mode is
+/// deactivated (or the app loses focus), everything is restored cleanly.
+///
+/// ## Why a class and not a ViewModifier?
+///
+/// Pointer state (`NSCursor.hide`, `CGAssociateMouseAndMouseCursorPosition`)
+/// is process-global. A SwiftUI modifier's lifecycle doesn't map cleanly to
+/// process-global state — `.task(id:)` can re-fire, views can be recreated,
+/// etc. This class owns the state explicitly with balanced engage/disengage
+/// calls, and a companion modifier (``DrawingModeModifier``) handles the
+/// SwiftUI lifecycle hookup.
+///
+/// ## Usage
+///
+/// ```swift
+/// @State private var drawingMode = DrawingMode()
+///
+/// MyCanvas()
+///   .trackpadTouches { touches in engine.processTouches(touches) }
+///   .drawingMode(drawingMode)
+///   .toolbar {
+///     Toggle("Draw", isOn: $drawingMode.isActive)
+///   }
+/// ```
+///
+@MainActor
+@Observable
+public final class DrawingMode {
+
+  // MARK: - Public state
+
+  /// Whether drawing mode is currently active.
+  /// Setting this to `true` hides and locks the cursor; `false` restores it.
+  public var isActive: Bool = false {
+    didSet {
+      guard isActive != oldValue else { return }
+      if isActive { engage() } else { disengage() }
+    }
+  }
+
+  // MARK: - Configuration
+
+  /// Which pointer behaviours to apply when drawing mode is active.
+  /// Defaults to all three: hide, lock, and click suppression.
+  public var behaviours: Behaviours = .all
+
+  /// Pointer behaviours that can be independently toggled.
+  public struct Behaviours: OptionSet, Sendable {
+    public let rawValue: Int
+    public init(rawValue: Int) { self.rawValue = rawValue }
+
+    /// Hide the cursor while drawing.
+    public static let hide = Behaviours(rawValue: 1 << 0)
+
+    /// Lock cursor position so it can't move to other windows/screens.
+    public static let lock = Behaviours(rawValue: 1 << 1)
+
+    /// Suppress mouse clicks to prevent accidental focus changes.
+    public static let suppressClicks = Behaviours(rawValue: 1 << 2)
+
+    /// All behaviours enabled.
+    public static let all: Behaviours = [.hide, .lock, .suppressClicks]
+  }
+
+  // MARK: - Init
+
+  public init(behaviours: Behaviours = .all) {
+    self.behaviours = behaviours
+  }
+
+  // Note: no deinit — cleanup is handled by `tearDown()`, which the
+  // `.drawingMode(_:)` modifier calls on disappear. Always pair this
+  // class with the modifier to ensure correct cleanup.
+
+  // MARK: - Internal state
+
+  /// Tracks whether we've called `NSCursor.hide()` — prevents stack imbalance.
+  private var cursorIsHidden = false
+
+  /// Tracks whether we've called `CGAssociateMouseAndMouseCursorPosition(0)`.
+  private var cursorIsLocked = false
+
+  /// Cursor position saved when entering drawing mode, restored on exit.
+  private var savedCursorPosition: CGPoint?
+
+  /// Local event monitor for suppressing clicks.
+  private var clickMonitor: Any?
+
+  /// Observer for app deactivation (Cmd+Tab, clicking another app, etc.).
+  private var deactivationObserver: NSObjectProtocol?
+
+  /// Observer for app reactivation.
+  private var activationObserver: NSObjectProtocol?
+
+  /// Whether observers have been installed (done once via the modifier).
+  private var observersInstalled = false
+
+  // MARK: - Lifecycle (called by the modifier)
+
+  /// Install app activation observers. Called once when the modifier appears.
+  func setUp() {
+    guard !observersInstalled else { return }
+    observersInstalled = true
+
+    deactivationObserver = NotificationCenter.default.addObserver(
+      forName: NSApplication.didResignActiveNotification,
+      object: nil,
+      queue: .main
+    ) { [weak self] _ in
+      MainActor.assumeIsolated {
+        self?.handleAppDeactivation()
+      }
+    }
+
+    activationObserver = NotificationCenter.default.addObserver(
+      forName: NSApplication.didBecomeActiveNotification,
+      object: nil,
+      queue: .main
+    ) { [weak self] _ in
+      MainActor.assumeIsolated {
+        self?.handleAppActivation()
+      }
+    }
+  }
+
+  /// Remove observers and force-disengage. Called when the modifier disappears.
+  func tearDown() {
+    disengage()
+
+    if let observer = deactivationObserver {
+      NotificationCenter.default.removeObserver(observer)
+      deactivationObserver = nil
+    }
+    if let observer = activationObserver {
+      NotificationCenter.default.removeObserver(observer)
+      activationObserver = nil
+    }
+    observersInstalled = false
+  }
+
+  // MARK: - Engage / Disengage
+
+  private func engage() {
+    // Save current cursor position for restoration later.
+    // NSEvent.mouseLocation is in screen coordinates (bottom-left origin).
+    savedCursorPosition = screenCursorPosition()
+
+    if behaviours.contains(.lock) {
+      lockCursor()
+    }
+
+    if behaviours.contains(.hide) {
+      hideCursor()
+    }
+
+    if behaviours.contains(.suppressClicks) {
+      installClickMonitor()
+    }
+  }
+
+  private func disengage() {
+    removeClickMonitor()
+    unlockCursor()
+    showCursor()
+    restoreCursorPosition()
+  }
+
+  // MARK: - App activation
+
+  /// When the app loses focus, always disengage pointer control — the user
+  /// needs their cursor back to interact with other apps. We don't clear
+  /// `isActive` so we can re-engage when they return.
+  private func handleAppDeactivation() {
+    guard isActive else { return }
+    removeClickMonitor()
+    unlockCursor()
+    showCursor()
+    // Don't restore position — they may have intentionally clicked elsewhere
+  }
+
+  /// When the app regains focus, re-engage if drawing mode is still active.
+  private func handleAppActivation() {
+    guard isActive else { return }
+    // Small delay lets the system finish its activation before we grab the cursor
+    Task { @MainActor [weak self] in
+      try? await Task.sleep(for: .milliseconds(50))
+      guard let self, self.isActive else { return }
+      self.savedCursorPosition = self.screenCursorPosition()
+      self.engage()
+    }
+  }
+
+  // MARK: - Cursor hiding (balanced)
+
+  private func hideCursor() {
+    guard !cursorIsHidden else { return }
+    NSCursor.hide()
+    cursorIsHidden = true
+  }
+
+  private func showCursor() {
+    guard cursorIsHidden else { return }
+    NSCursor.unhide()
+    cursorIsHidden = false
+  }
+
+  // MARK: - Cursor locking
+
+  private func lockCursor() {
+    guard !cursorIsLocked else { return }
+    CGAssociateMouseAndMouseCursorPosition(0)
+    cursorIsLocked = true
+  }
+
+  private func unlockCursor() {
+    guard cursorIsLocked else { return }
+    CGAssociateMouseAndMouseCursorPosition(1)
+    cursorIsLocked = false
+  }
+
+  // MARK: - Cursor position
+
+  private func restoreCursorPosition() {
+    guard let position = savedCursorPosition else { return }
+    // CGWarpMouseCursorPosition uses top-left origin; convert from NSEvent's
+    // bottom-left screen coordinates.
+    let screenHeight = NSScreen.main?.frame.height ?? 0
+    let flipped = CGPoint(x: position.x, y: screenHeight - position.y)
+    CGWarpMouseCursorPosition(flipped)
+    savedCursorPosition = nil
+  }
+
+  private func screenCursorPosition() -> CGPoint {
+    NSEvent.mouseLocation
+  }
+
+  // MARK: - Click suppression
+
+  private func installClickMonitor() {
+    guard clickMonitor == nil else { return }
+    clickMonitor = NSEvent.addLocalMonitorForEvents(
+      matching: [
+        .leftMouseDown, .leftMouseUp,
+        .rightMouseDown, .rightMouseUp,
+        .otherMouseDown, .otherMouseUp,
+      ]
+    ) { _ in
+      // Returning nil swallows the event
+      nil
+    }
+  }
+
+  private func removeClickMonitor() {
+    guard let monitor = clickMonitor else { return }
+    NSEvent.removeMonitor(monitor)
+    clickMonitor = nil
+  }
+}
+#endif

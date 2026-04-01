@@ -40,22 +40,26 @@ import SwiftUI
 ///   `removeLast()`, redo is re-appending from a separate stack.
 ///
 @Observable
-class StrokeEngine {
+public class StrokeEngine {
 
   // MARK: - State
 
   /// Strokes currently being drawn, keyed by touch ID.
-  private(set) var activeStrokes: [Int: ActiveStroke] = [:]
+  public private(set) var activeStrokes: [Int: ActiveStroke] = [:]
 
   /// Strokes that have been completed (finger lifted).
-  private(set) var completedStrokes: [CompletedStroke] = []
+  public private(set) var completedStrokes: [CompletedStroke] = []
 
   // MARK: - Configuration
 
   /// Minimum distance (in points) between consecutive stroke points.
   /// Higher values reduce point density and improve performance at the
   /// cost of resolution. Default is 2 points.
-  var minimumPointDistance: CGFloat = 2.0
+  public var minimumPointDistance: CGFloat = 2.0
+
+  // MARK: - Init
+
+  public init() {}
 
   // MARK: - Processing
 
@@ -64,7 +68,7 @@ class StrokeEngine {
   /// Call this from the `.trackpadTouches()` callback every time touches
   /// update. The engine handles the full lifecycle: creating strokes on
   /// `began`, appending points on `changed`, and finalising on `ended`.
-  func processTouches(_ touches: [TouchPoint]) {
+  public func processTouches(_ touches: [TouchPoint]) {
     for touch in touches where !touch.isResting {
       switch touch.phase {
         case .began:
@@ -83,26 +87,26 @@ class StrokeEngine {
   }
 
   /// Remove all completed strokes.
-  func clear() {
+  public func clear() {
     completedStrokes.removeAll()
   }
 
   /// Undo the most recent completed stroke. Returns `true` if there was
   /// something to undo.
   @discardableResult
-  func undo() -> Bool {
+  public func undo() -> Bool {
     completedStrokes.popLast() != nil
   }
 
   // MARK: - Derived state
 
   /// Total points across all completed strokes.
-  var totalPointCount: Int {
+  public var totalPointCount: Int {
     completedStrokes.reduce(0) { $0 + $1.points.count }
   }
 
   /// Whether any finger is currently drawing.
-  var isDrawing: Bool {
+  public var isDrawing: Bool {
     !activeStrokes.isEmpty
   }
 
