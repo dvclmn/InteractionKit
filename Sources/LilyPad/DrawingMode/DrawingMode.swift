@@ -42,10 +42,11 @@ import SwiftUI
 @Observable
 public final class DrawingMode {
 
-  // MARK: - Public state
-
   /// Whether drawing mode is currently active.
   /// Setting this to `true` hides and locks the cursor; `false` restores it.
+  ///
+  /// I may consider instead driving this via `onChange()` in the View
+  /// rather than `didSet`; maybe more SwiftUI-like?
   public var isActive: Bool = false {
     didSet {
       guard isActive != oldValue else { return }
@@ -53,46 +54,12 @@ public final class DrawingMode {
     }
   }
 
-  // MARK: - Configuration
-
-  /// Which pointer behaviours to apply when drawing mode is active.
-  /// Defaults to all three: hide, lock, and click suppression.
-  public var behaviours: Behaviours = .all
-
-  /// Pointer behaviours that can be independently toggled.
-  public struct Behaviours: OptionSet, Sendable {
-    public let rawValue: Int
-    public init(rawValue: Int) { self.rawValue = rawValue }
-
-    /// Hide the cursor while drawing.
-    public static let hide = Behaviours(rawValue: 1 << 0)
-
-    /// Lock cursor position so it can't move to other windows/screens.
-    public static let lock = Behaviours(rawValue: 1 << 1)
-
-    /// Suppress mouse clicks to prevent accidental focus changes.
-    public static let suppressClicks = Behaviours(rawValue: 1 << 2)
-
-    /// All behaviours enabled.
-    public static let all: Behaviours = [.hide, .lock, .suppressClicks]
-  }
-
-  // MARK: - Init
-
-  public init(behaviours: Behaviours = .all) {
-    self.behaviours = behaviours
-  }
-
-  // Note: no deinit — cleanup is handled by `tearDown()`, which the
-  // `.drawingMode(_:)` modifier calls on disappear. Always pair this
-  // class with the modifier to ensure correct cleanup.
-
   // MARK: - Internal state
 
-  /// Tracks whether we've called `NSCursor.hide()` — prevents stack imbalance.
+  /// Tracks whether `NSCursor.hide()` has been called — prevents stack imbalance.
   private var cursorIsHidden = false
 
-  /// Tracks whether we've called `CGAssociateMouseAndMouseCursorPosition(0)`.
+  /// Tracks whether `CGAssociateMouseAndMouseCursorPosition(0)` has been called
   private var cursorIsLocked = false
 
   /// Cursor position saved when entering drawing mode, restored on exit.
@@ -110,7 +77,22 @@ public final class DrawingMode {
   /// Whether observers have been installed (done once via the modifier).
   private var observersInstalled = false
 
-  // MARK: - Lifecycle (called by the modifier)
+  /// Which pointer behaviours to apply when drawing mode is active.
+  /// Defaults to all three: hide, lock, and click suppression.
+  public var behaviours: Behaviours = .all
+
+  public init(behaviours: Behaviours = .all) {
+    self.behaviours = behaviours
+  }
+
+  /// Note: no deinit — cleanup is handled by `tearDown()`, which the
+  /// `.drawingMode(_:)` modifier calls on disappear. Always pair this
+  /// class with `DrawingModeModifier` to ensure correct cleanup.
+}
+
+// MARK: - Lifecycle (called by the modifier)
+
+extension DrawingMode {
 
   /// Install app activation observers. Called once when the modifier appears.
   func setUp() {
@@ -120,7 +102,7 @@ public final class DrawingMode {
     deactivationObserver = NotificationCenter.default.addObserver(
       forName: NSApplication.didResignActiveNotification,
       object: nil,
-      queue: .main
+      queue: .main,
     ) { [weak self] _ in
       MainActor.assumeIsolated {
         self?.handleAppDeactivation()
@@ -130,7 +112,7 @@ public final class DrawingMode {
     activationObserver = NotificationCenter.default.addObserver(
       forName: NSApplication.didBecomeActiveNotification,
       object: nil,
-      queue: .main
+      queue: .main,
     ) { [weak self] _ in
       MainActor.assumeIsolated {
         self?.handleAppActivation()
@@ -152,12 +134,15 @@ public final class DrawingMode {
     }
     observersInstalled = false
   }
+}
 
-  // MARK: - Engage / Disengage
+// MARK: - Engage / Disengage
+
+extension DrawingMode {
 
   private func engage() {
-    // Save current cursor position for restoration later.
-    // NSEvent.mouseLocation is in screen coordinates (bottom-left origin).
+    /// Save current cursor position for restoration later.
+    /// Note: `NSEvent.mouseLocation` is in screen coordinates, origin is bottom-left
     savedCursorPosition = screenCursorPosition()
 
     if behaviours.contains(.lock) {

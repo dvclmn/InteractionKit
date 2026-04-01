@@ -8,6 +8,24 @@
 //import EnumMacros
 import SwiftUI
 
+//@SetOfOptions<Int>
+//public struct Modifiers: Sendable, Hashable {
+//  public enum Options: Int, CaseIterable, Identifiable, Hashable, Equatable {
+//    case shift
+//    case option
+//    case command
+//    case control
+//    case capsLock
+//    case numericPad
+//  }
+//}
+
+//extension Modifiers.Options {
+//  public var id: Int { rawValue }
+//}
+
+/// A representation of Modifier keys that doesn't rely on
+/// and can bridge between SwiftUI / AppKit
 public struct Modifiers: OptionSet, Sendable, Hashable {
   public init(rawValue: Int) {
     self.rawValue = rawValue
@@ -29,32 +47,7 @@ public struct Modifiers: OptionSet, Sendable, Hashable {
     .capsLock,
     .numericPad,
   ]
-
-  //  public static let all: Self = [
-  //    .swipe,
-  //    .pinch,
-  //    .pointerHover,
-  //    .pointerTap,
-  //    .pointerDrag
-  //  ]
 }
-
-/// A representation of Modifier keys that doesn't use SwiftUI or AppKit
-//@SetOfOptions<Int>
-//public struct Modifiers: Sendable, Hashable {
-//  public enum Options: Int, CaseIterable, Identifiable, Hashable, Equatable {
-//    case shift
-//    case option
-//    case command
-//    case control
-//    case capsLock
-//    case numericPad
-//  }
-//}
-
-//extension Modifiers.Options {
-//  public var id: Int { rawValue }
-//}
 
 extension Modifiers {
   #if canImport(AppKit)
@@ -110,11 +103,6 @@ extension Modifiers {
     .capsLock: .init(name: "Caps Lock", symbol: "􀆡"),
     .numericPad: .init(name: "Numeric Pad", symbol: "􀅱"),
   ]
-
-  //  private var individualOptions: [Modifiers] {
-  //    Modifiers.metadata.keys.filter { contains($0) }
-  //  }
-
 }
 
 public struct ModifierDisplayElements: OptionSet, Sendable {

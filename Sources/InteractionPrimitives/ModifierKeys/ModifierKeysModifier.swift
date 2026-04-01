@@ -7,9 +7,8 @@
 
 import SwiftUI
 
-#if canImport(AppKit)
-
-/// Important: Don't forget to provide the entry point for the modifier:
+/// Important: Don't forget to provide the entry point for the modifier
+/// somewhere in the View hierarchy, high enough to cover Views that need them.
 ///
 /// ```
 /// import SwiftUI
@@ -20,29 +19,29 @@ import SwiftUI
 ///   var body: some Scene {
 ///     WindowGroup {
 ///       ContentView()
-///         .readModifierKeys() // <- Here
+///         .readModifierKeys() // <- E.g. here
 ///     }
 ///   }
 /// }
 /// ```
 public struct ModifierKeysModifier: ViewModifier {
-  
+
   @State private var modifierKeys = Modifiers()
-  
+
   let defaultKeys: EventModifiers = [.command, .shift, .option, .control, .capsLock]
-  
+
   let keysToWatch: EventModifiers?
   public func body(content: Content) -> some View {
-    
+
     if #available(macOS 15, iOS 18, *) {
       content
         .onModifierKeysChanged(mask: keysToWatch ?? defaultKeys, initial: true) { old, new in
           self.modifierKeys = Modifiers(from: new)
         }
         .environment(\.modifierKeys, modifierKeys)
-      
+
     } else {
-#if canImport(AppKit)
+      #if canImport(AppKit)
       content
         .onAppear {
           NSEvent.addLocalMonitorForEvents(matching: [.flagsChanged]) { event in
@@ -51,11 +50,11 @@ public struct ModifierKeysModifier: ViewModifier {
           }
         }
         .environment(\.modifierKeys, modifierKeys)
-#else
+      #else
       content
-#endif
+      #endif
     }
-    
+
   }
 }
 
@@ -65,4 +64,3 @@ extension View {
     self.modifier(ModifierKeysModifier(keysToWatch: keysToWatch))
   }
 }
-#endif
