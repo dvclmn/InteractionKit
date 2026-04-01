@@ -17,16 +17,13 @@ public class StrokeEngine {
   // MARK: - Configuration
 
   /// Minimum distance (in points) between consecutive stroke points.
-  /// Higher values reduce point density and improve performance at the
-  /// cost of resolution. Default is 2 points.
+  /// Higher values reduce point density and improve performance at the cost of resolution.
   public var minimumPointDistance: CGFloat = 2.0
 
   public init() {}
 }
 
 extension StrokeEngine {
-
-  // MARK: - Processing
 
   /// Process a frame of touch input.
   ///
@@ -56,19 +53,19 @@ extension StrokeEngine {
     completedStrokes.popLast() != nil
   }
 
-  // MARK: - Derived state
-
   /// Total points across all completed strokes.
   public var totalPointCount: Int {
     completedStrokes.reduce(0) { $0 + $1.points.count }
   }
 
   /// Whether any finger is currently drawing.
-  public var isDrawing: Bool {
-    !activeStrokes.isEmpty
-  }
+  public var isDrawing: Bool { !activeStrokes.isEmpty }
 
-  // MARK: - Private
+}
+
+// MARK: - Stroke helpers
+
+extension StrokeEngine {
 
   private func beginStroke(for touch: TouchPoint) {
     let point = StrokePoint(

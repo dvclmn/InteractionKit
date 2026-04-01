@@ -60,6 +60,4 @@ public func + <Space>(
     width: lhs.width + rhs.width,
     height: lhs.height + rhs.height,
   )
-  //  lhs.width += rhs.width
-  //  lhs.height += rhs.height
 }

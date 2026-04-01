@@ -5,21 +5,17 @@
 
 import SwiftUI
 
-/// Drop-in example view demonstrating LilyPad's three-layer pattern:
+/// LilyPad (`.trackpadTouches`) captures raw multi-touch input and
+/// delivers ordered `[TouchPoint]` with stable finger numbering.
 ///
-/// 1. **LilyPad** (`.trackpadTouches`) captures raw multi-touch input and
-///    delivers ordered `[TouchPoint]` with stable finger numbering.
+/// `StrokeEngine` accumulates those touches into active and completed
+/// strokes, handling the began/changed/ended lifecycle.
 ///
-/// 2. **StrokeEngine** accumulates those touches into active and completed
-///    strokes, handling the began/changed/ended lifecycle.
+/// `DrawingCanvas` renders the strokes using SwiftUI Canvas.
 ///
-/// 3. **DrawingCanvas** renders the strokes using SwiftUI Canvas.
-///
-/// Additionally, **DrawingMode** manages the pointer — hiding and locking
-/// the cursor while drawing so it doesn't interfere with the trackpad-based
-/// absolute positioning experience.
-///
-/// To use: add `LilyPadDemoView()` to a window in your app.
+/// Additionally, `DrawingMode` manages the pointer behaviour.
+/// This involves hiding/locking the cursor while drawing so it doesn't interfere
+/// with the trackpad-based absolute positioning experience.
 public struct LilyPadDemoView: View {
   @State private var engine = StrokeEngine()
   @State private var drawingMode = DrawingMode()
@@ -28,6 +24,7 @@ public struct LilyPadDemoView: View {
   public init() {}
 
   public var body: some View {
+
     DrawingCanvas(engine: engine)
       .trackpadTouches(
         isEnabled: drawingMode.isActive,
@@ -36,12 +33,13 @@ public struct LilyPadDemoView: View {
         engine.processTouches(touches)
       }
       .drawingMode(drawingMode)
+
       .overlay(alignment: .bottomLeading) {
-        statsOverlay
+        StatsOverlay()
       }
       .overlay(alignment: .center) {
         if !drawingMode.isActive {
-          promptOverlay
+          ModePromptOverlay()
         }
       }
       .toolbar {
@@ -63,8 +61,12 @@ public struct LilyPadDemoView: View {
         }
       }
   }
+}
 
-  private var promptOverlay: some View {
+extension LilyPadDemoView {
+
+  @ViewBuilder
+  private func ModePromptOverlay() -> some View {
     VStack(spacing: 8) {
       Text("Drawing Mode is off")
         .font(.title3)
@@ -74,9 +76,11 @@ public struct LilyPadDemoView: View {
     }
     .padding()
     .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+
   }
 
-  private var statsOverlay: some View {
+  @ViewBuilder
+  private func StatsOverlay() -> some View {
     VStack(alignment: .leading, spacing: 4) {
       if drawingMode.isActive {
         Text("Drawing mode: ON")
@@ -93,5 +97,6 @@ public struct LilyPadDemoView: View {
     .font(.caption)
     .foregroundStyle(.secondary)
     .padding(8)
+
   }
 }
