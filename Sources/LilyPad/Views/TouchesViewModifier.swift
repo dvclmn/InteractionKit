@@ -1,60 +1,77 @@
 //
-//  TouchesView.swift
+//  TouchesViewModifier.swift
 //  LilyPad
 //
 //  Created by Dave Coleman on 7/5/2025.
 //
 
-//import BasePrimitives
 import SwiftUI
 
-public struct TrackpadTouchesModifier: ViewModifier {
-  @State private var localTouches: Set<TouchPoint> = []
+/// View modifier that overlays trackpad touch capture on any view.
+///
+/// Usage:
+/// ```swift
+/// MyDrawingCanvas()
+///   .trackpadTouches { touches in
+///     // `touches` is [TouchPoint], ordered by first contact time
+///     for touch in touches {
+///       print("Finger \(touch.touchOrder): \(touch.position)")
+///     }
+///   }
+/// ```
+///
+/// Enable `showIndicators` for a visual debug overlay showing numbered
+/// finger positions on the trackpad.
+struct TrackpadTouchesModifier: ViewModifier {
+  @State private var touches: [TouchPoint] = []
 
   let isEnabled: Bool
-  //  let mapStrategy: ContentSizeMode
-  let shouldShowIndicators: Bool
-  let didUpdateTouches: TouchesUpdate
-  let didUpdatePressure: PressureUpdate
+  let showIndicators: Bool
+  let onUpdate: TouchesUpdate
 
-  public func body(content: Content) -> some View {
+  func body(content: Content) -> some View {
     GeometryReader { proxy in
       content
-      if isEnabled && shouldShowIndicators {
-        TouchIndicatorsView(
-          mappedTouches: Array(localTouches),
-          //          mappingStrategy: mapStrategy,
-          containerSize: proxy.size,
-        )
-      }
-      if isEnabled {
-        TrackpadTouchesView { touchOutput in
-          didUpdateTouches(touchOutput)
 
-          if shouldShowIndicators {
-            self.localTouches = touchOutput
+      if isEnabled {
+        TrackpadTouchesView { incoming in
+          onUpdate(incoming)
+          if showIndicators {
+            touches = incoming
           }
         }
+
+        if showIndicators {
+          TouchIndicatorsView(
+            touches: touches,
+            containerSize: proxy.size
+          )
+        }
       }
-    }  // END geo reader
+    }
   }
 }
+
 extension View {
 
-  public func touches(
+  /// Captures trackpad multi-touch input and delivers ordered touch updates.
+  ///
+  /// - Parameters:
+  ///   - isEnabled: Whether touch capture is active. Default `true`.
+  ///   - showIndicators: Show a debug overlay with numbered finger positions.
+  ///     Default `true`.
+  ///   - onUpdate: Called each time touches change, with an array of
+  ///     ``TouchPoint`` values sorted by first-contact order.
+  public func trackpadTouches(
     isEnabled: Bool = true,
-    //    mapStrategy: ContentSizeMode,
     showIndicators: Bool = true,
-    didUpdateTouches: @escaping TouchesUpdate,
-    didUpdatePressure: @escaping PressureUpdate = { _ in },
+    onUpdate: @escaping TouchesUpdate
   ) -> some View {
     self.modifier(
       TrackpadTouchesModifier(
         isEnabled: isEnabled,
-        //        mapStrategy: mapStrategy,
-        shouldShowIndicators: showIndicators,
-        didUpdateTouches: didUpdateTouches,
-        didUpdatePressure: didUpdatePressure,
+        showIndicators: showIndicators,
+        onUpdate: onUpdate
       )
     )
   }

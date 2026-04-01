@@ -1,6 +1,6 @@
 //
 //  CGPoint+Sample.swift
-//  InteractionKit
+//  LilyPad
 //
 //  Created by Dave Coleman on 31/3/2026.
 //
@@ -9,7 +9,9 @@ import Foundation
 
 extension Array where Element == CGPoint {
 
-  /// Returns a view of every `stride`-th point, always including the first.
+  /// Returns every `stride`-th point, always including the first and last.
+  ///
+  /// Useful for reducing point density before rendering or storage.
   public func sampled(every stride: Int) -> [CGPoint] {
     guard stride > 1, count > 1 else { return self }
 
@@ -22,7 +24,6 @@ extension Array where Element == CGPoint {
       i += stride
     }
 
-    // Optional: ensure last point is included
     if let last = last, result.last != last {
       result.append(last)
     }

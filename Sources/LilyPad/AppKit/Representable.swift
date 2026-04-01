@@ -7,19 +7,20 @@
 
 #if canImport(AppKit)
 import SwiftUI
-//import BasePrimitives
 
-public typealias TouchesUpdate = (Set<TouchPoint>) -> Void
-public typealias PressureUpdate = (CGFloat) -> Void
+/// Callback signature for receiving ordered touch updates.
+/// Touches are sorted by the order each finger first made contact.
+public typealias TouchesUpdate = ([TouchPoint]) -> Void
 
+/// NSViewRepresentable bridge that hosts ``TrackpadTouchesNSView``
+/// inside a SwiftUI view hierarchy.
 struct TrackpadTouchesView: NSViewRepresentable {
   var didUpdateTouches: TouchesUpdate
 
-  public func makeNSView(context: Context) -> TrackpadTouchesNSView {
-    let view = TrackpadTouchesNSView(didUpdateTouches)
-    return view
+  func makeNSView(context: Context) -> TrackpadTouchesNSView {
+    TrackpadTouchesNSView(didUpdateTouches)
   }
 
-  public func updateNSView(_ nsView: TrackpadTouchesNSView, context: Context) {}
+  func updateNSView(_ nsView: TrackpadTouchesNSView, context: Context) {}
 }
 #endif

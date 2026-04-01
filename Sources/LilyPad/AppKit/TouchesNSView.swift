@@ -6,49 +6,40 @@
 //
 
 import AppKit
-//import BasePrimitives
 
-/// The underlying AppKit NSView that captures raw trackpad touches
-public class TrackpadTouchesNSView: NSView {
+/// AppKit `NSView` that captures raw trackpad touch events and forwards
+/// them through ``TrackpadTouchManager`` for processing.
+///
+/// Configured to receive indirect touches (trackpad, not Magic Mouse)
+/// including resting/stationary fingers.
+class TrackpadTouchesNSView: NSView {
   var onTouchesChanged: TouchesUpdate
 
   private let touchManager = TrackpadTouchManager()
 
-  public init(_ onTouchesChanged: @escaping TouchesUpdate) {
+  init(_ onTouchesChanged: @escaping TouchesUpdate) {
     self.onTouchesChanged = onTouchesChanged
     super.init(frame: .zero)
-    setupView()
-  }
-
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  private func setupView() {
     allowedTouchTypes = [.indirect]
     wantsRestingTouches = true
   }
 
+  @available(*, unavailable)
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
   private func processTouches(with event: NSEvent) {
-    let nsTouches = event.allTouches()
-    let processedTouches = touchManager.processCapturedTouches(
-      nsTouches,
+    let touches = touchManager.processTouches(
+      event.allTouches(),
       timestamp: event.timestamp,
       in: .view(frame.size)
     )
-    onTouchesChanged(processedTouches)
+    onTouchesChanged(touches)
   }
 
-  public override func touchesBegan(with event: NSEvent) {
-    processTouches(with: event)
-  }
-  public override func touchesMoved(with event: NSEvent) {
-    processTouches(with: event)
-  }
-  public override func touchesEnded(with event: NSEvent) {
-    processTouches(with: event)
-  }
-  public override func touchesCancelled(with event: NSEvent) {
-    processTouches(with: event)
-  }
+  override func touchesBegan(with event: NSEvent) { processTouches(with: event) }
+  override func touchesMoved(with event: NSEvent) { processTouches(with: event) }
+  override func touchesEnded(with event: NSEvent) { processTouches(with: event) }
+  override func touchesCancelled(with event: NSEvent) { processTouches(with: event) }
 }
