@@ -6,7 +6,7 @@
 import SwiftUI
 
 @Observable
-public class StrokeEngine {
+public final class StrokeEngine {
 
   /// Strokes currently being drawn, keyed by touch ID.
   public private(set) var activeStrokes: [TouchID: ActiveStroke] = [:]

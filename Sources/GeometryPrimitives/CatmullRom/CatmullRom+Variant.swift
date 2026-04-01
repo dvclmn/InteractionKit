@@ -15,7 +15,7 @@ extension CatmullRom {
     case centripetal
     case chordal
 
-    var alpha: CGFloat {
+    public var alpha: CGFloat {
       switch self {
         case .uniform: 0
         case .centripetal: 0.5
@@ -30,7 +30,6 @@ extension CatmullRom {
         case .uniform: "eye"
         case .chordal: "eye"
         case .centripetal: "eye"
-      //      case .none: "eye"
       }
     }
 
