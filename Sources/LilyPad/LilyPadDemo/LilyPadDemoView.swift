@@ -31,7 +31,7 @@ public struct LilyPadDemoView: View {
     DrawingCanvas(engine: engine)
       .trackpadTouches(
         isEnabled: drawingMode.isActive,
-        showIndicators: showIndicators
+        showIndicators: showIndicators,
       ) { touches in
         engine.processTouches(touches)
       }

@@ -5,44 +5,8 @@
 
 import SwiftUI
 
-/// Processes touch input from LilyPad into drawable strokes.
-///
-/// Feed `[TouchPoint]` from the `.trackpadTouches()` modifier into
-/// ``processTouches(_:)`` each frame. The engine manages active strokes
-/// (fingers currently down) and completed strokes (fingers lifted).
-///
-/// ## How to use
-///
-/// ```swift
-/// @State private var engine = StrokeEngine()
-///
-/// MyCanvas(engine: engine)
-///   .trackpadTouches { touches in
-///     engine.processTouches(touches)
-///   }
-/// ```
-///
-/// ## Extension points
-///
-/// This is a minimal, concrete engine. To build on it:
-///
-/// - **Point filtering**: Adjust ``minimumPointDistance`` to control density,
-///   or subclass/wrap to add custom filtering logic (e.g. pressure threshold).
-///
-/// - **Smoothing**: Post-process `CompletedStroke.points` with Catmull-Rom
-///   or cubic Bézier interpolation before rendering.
-///
-/// - **Brush engine**: Wrap this class to add per-stroke style (colour, brush
-///   texture, width curve) — the engine handles accumulation, the brush
-///   handles appearance.
-///
-/// - **Undo/redo**: Completed strokes are an ordered list. Undo is
-///   `removeLast()`, redo is re-appending from a separate stack.
-///
 @Observable
 public class StrokeEngine {
-
-  // MARK: - State
 
   /// Strokes currently being drawn, keyed by touch ID.
   public private(set) var activeStrokes: [Int: ActiveStroke] = [:]
@@ -116,12 +80,12 @@ public class StrokeEngine {
     let point = StrokePoint(
       position: touch.position,
       speed: touch.magnitude,
-      touchOrder: touch.touchOrder
+      touchOrder: touch.touchOrder,
     )
     activeStrokes[touch.id] = ActiveStroke(
       id: touch.id,
       touchOrder: touch.touchOrder,
-      points: [point]
+      points: [point],
     )
   }
 
@@ -134,11 +98,12 @@ public class StrokeEngine {
       if sqrt(dx * dx + dy * dy) < minimumPointDistance { return }
     }
 
-    stroke.points.append(StrokePoint(
-      position: touch.position,
-      speed: touch.magnitude,
-      touchOrder: touch.touchOrder
-    ))
+    stroke.points.append(
+      StrokePoint(
+        position: touch.position,
+        speed: touch.magnitude,
+        touchOrder: touch.touchOrder,
+      ))
     activeStrokes[touch.id] = stroke
   }
 
@@ -146,9 +111,10 @@ public class StrokeEngine {
     guard let stroke = activeStrokes.removeValue(forKey: touch.id) else { return }
     guard stroke.points.count >= 2 else { return }
 
-    completedStrokes.append(CompletedStroke(
-      points: stroke.points,
-      touchOrder: stroke.touchOrder
-    ))
+    completedStrokes.append(
+      CompletedStroke(
+        points: stroke.points,
+        touchOrder: stroke.touchOrder,
+      ))
   }
 }
