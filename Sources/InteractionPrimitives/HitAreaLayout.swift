@@ -38,30 +38,23 @@ extension HitAreaLayout {
   /// Resizable View.
   public var fillSizeMax: CGSize {
     switch controlPoint.pointType {
-      case .horizontalEdge:
-        return CGSize(width: .infinity, height: thickness)
-      case .verticalEdge:
-        return CGSize(width: thickness, height: .infinity)
-      case .corner:
-        return shouldIncludeCorners ? CGSize(fromLength: thickness) : .zero
-      case .centre:
-        return .zero
+      case .horizontalEdge: CGSize(width: .infinity, height: thickness)
+      case .verticalEdge: CGSize(width: thickness, height: .infinity)
+      case .corner: shouldIncludeCorners ? CGSize(fromLength: thickness) : .zero
+      case .centre: .zero
 
     }
   }
 
   /// Padding created to accomodate corners if present
   public var edgePadding: EdgeInsets {
-
     let inset = thickness
-
     let padding: EdgeInsets =
       switch (offset, shouldIncludeCorners) {
         case (.outside, _): .zero
         case (_, false): .zero
         case (.inside, true): controlPoint.hitAreaPadding(inset)
         case (.centre, true): controlPoint.hitAreaPadding(inset / 2)
-
       }
 
     return padding
@@ -82,16 +75,18 @@ extension HitAreaLayout {
 
 extension UnitPoint {
   func hitAreaPadding(_ amount: CGFloat) -> EdgeInsets {
-    fatalError("Need to clarify logic here, for axis/convention")
-    //    switch self {
-    //      case .top, .bottom:
-    //        return EdgeInsets(horizontal: amount)
-    //
-    //      case .leading, .trailing:
-    //        return EdgeInsets(top: amount, bottom: amount)
-    //
-    //      default:
-    //        return .zero
-    //    }
+    switch self {
+      case .top, .bottom:
+        /// Horizontal padding for horizontal edges
+        return EdgeInsets(top: 0, leading: amount, bottom: 0, trailing: amount)
+
+      case .leading, .trailing:
+        /// Vertical padding for vertical edges
+        return EdgeInsets(top: amount, leading: 0, bottom: amount, trailing: 0)
+
+      default:
+        /// Corners and center do not add padding here; handled by edgePadding logic
+        return .zero
+    }
   }
 }

@@ -42,7 +42,10 @@ extension CoordinateSpaceMapper {
 
   /// Convert canvas-space point to screen-space
   func screenPoint(from canvasPoint: Point<CanvasSpace>) -> Point<ScreenSpace> {
-    fatalError("Not yet implemented")
+    Point<ScreenSpace>(
+      x: artworkFrame.minX + canvasPoint.x * zoomClamped,
+      y: artworkFrame.minY + canvasPoint.y * zoomClamped,
+    )
   }
 
   private var canvasXRange: Range<CGFloat> { 0..<canvasSize.width }
