@@ -8,16 +8,15 @@
 import SwiftUI
 
 private struct EnvironmentSyncModifier<Value: Equatable>: ViewModifier {
-  //private struct EnvironmentSyncModifier<Key: EnvironmentKey, Value: Equatable>: ViewModifier {
 
   @Environment private var value: Value
-//  let apply: (Value) -> Void
-    let apply: @MainActor (Value) -> Void
+  //  let apply: (Value) -> Void
+  let apply: @MainActor (Value) -> Void
 
   init(
     //    _ keyPath: EnvironmentKey,
     _ keyPath: KeyPath<EnvironmentValues, Value>,
-    apply: @escaping @MainActor (Value) -> Void
+    apply: @escaping @MainActor (Value) -> Void,
   ) {
     _value = Environment(keyPath)
     self.apply = apply
@@ -42,18 +41,17 @@ private struct EnvironmentSyncModifier<Value: Equatable>: ViewModifier {
 extension View {
   public func syncEnvironment<Value: Equatable>(
     _ keyPath: KeyPath<EnvironmentValues, Value>,
-    apply: @escaping @MainActor (Value) -> Void
+    apply: @escaping @MainActor (Value) -> Void,
   ) -> some View {
     modifier(EnvironmentSyncModifier(keyPath, apply: apply))
   }
-  
+
   public func syncEnvironment<Value: Equatable>(
     _ keyPath: KeyPath<EnvironmentValues, Value>,
-    to binding: Binding<Value>
+    to binding: Binding<Value>,
   ) -> some View {
     syncEnvironment(keyPath) { binding.wrappedValue = $0 }
   }
-
 
   /// ## Custom closure
   ///
