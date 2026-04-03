@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-/// Important: Don't forget to provide the entry point for the modifier
-/// somewhere in the View hierarchy, high enough to cover Views that need them.
+/// Important: Don't forget to provide the entry point for the modifier somewhere
+/// in the View hierarchy, high enough to cover Views that need the modifiers.
 ///
 /// ```
 /// import SwiftUI
@@ -28,14 +28,15 @@ public struct ModifierKeysModifier: ViewModifier {
 
   @State private var modifierKeys = Modifiers()
 
-  let defaultKeys: EventModifiers = [.command, .shift, .option, .control, .capsLock]
-
-  let keysToWatch: EventModifiers?
+  let keysToWatch: EventModifiers
   public func body(content: Content) -> some View {
 
     if #available(macOS 15, iOS 18, *) {
       content
-        .onModifierKeysChanged(mask: keysToWatch ?? defaultKeys, initial: true) { old, new in
+        .onModifierKeysChanged(
+          mask: keysToWatch,
+          initial: true,
+        ) { _, new in
           self.modifierKeys = Modifiers(from: new)
         }
         .environment(\.modifierKeys, modifierKeys)
@@ -59,8 +60,7 @@ public struct ModifierKeysModifier: ViewModifier {
 }
 
 extension View {
-  /// Falls back to default mask, if no value supplied for `keysToWatch`
-  public func readModifierKeys(_ keysToWatch: EventModifiers? = nil) -> some View {
+  public func readModifierKeys(_ keysToWatch: EventModifiers = .all) -> some View {
     self.modifier(ModifierKeysModifier(keysToWatch: keysToWatch))
   }
 }
