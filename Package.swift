@@ -11,7 +11,7 @@ let package = Package(
     .library(
       name: "InteractionKit",
       targets: [
-        "GestureKit",
+//        "GestureKit",
         "InteractionPrimitives",
         "LilyPad",
       ],
@@ -25,12 +25,12 @@ let package = Package(
     .target(
       name: "InteractionPrimitives"
     ),
-    .target(
-      name: "GestureKit",
-      dependencies: [
-        .module(.interactionPrimitives)
-      ],
-    ),
+//    .target(
+//      name: "GestureKit",
+//      dependencies: [
+//        .module(.interactionPrimitives)
+//      ],
+//    ),
     .target(
       name: "LilyPad",
       dependencies: [
