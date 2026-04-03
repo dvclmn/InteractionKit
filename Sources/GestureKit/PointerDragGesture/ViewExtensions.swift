@@ -5,11 +5,12 @@
 //  Created by Dave Coleman on 13/3/2026.
 //
 
-import SwiftUI
 import InteractionPrimitives
+import SwiftUI
 
 extension View {
 
+  // TODO: Manage marqueeColour so it's only exposed where relevant
   /// Event-driven pointer drag gesture.
   ///
   /// The modifier handles gesture mechanics internally:
@@ -23,20 +24,23 @@ extension View {
   /// - Parameters:
   ///   - coordinateSpace: Coordinate space for the underlying `DragGesture`.
   ///   - behaviour: The drag mode (`.continuous`, `.marquee`, or `.none`).
-  ///   - minimumDistance: Minimum drag distance before the gesture activates.
+  ///   - marqueeColour: The colour to render the marquee rectangle, if needed.
+  ///  - minimumDistance: Minimum drag distance before the gesture activates.
   ///   - didUpdatePayload: Callback receiving the drag payload and phase.
   public func onPointerDragGesture(
     coordinateSpace: CoordinateSpace = .local,
     behaviour: DragBehavior,
+    marqueeColour: Color = .accentColor,
     minimumDistance: CGFloat = 5,
-    didUpdatePayload: @escaping DragEventUpdate
+    didUpdatePayload: @escaping DragEventUpdate,
   ) -> some View {
     self.modifier(
       PointerDragModifier(
         behaviour: behaviour,
+        marqueeColour: marqueeColour,
         coordinateSpace: coordinateSpace,
         minimumDistance: minimumDistance,
-        didUpdatePayload: didUpdatePayload
+        didUpdatePayload: didUpdatePayload,
       )
     )
   }

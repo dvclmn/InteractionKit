@@ -8,16 +8,16 @@
 #if canImport(AppKit)
 import AppKit
 import InteractionPrimitives
-//import BasePrimitives
 
-/// Swipe == Pan — avoiding using word Pan directly, as I keep getting
-/// confused between Pan the Gesture Kind, and Pan from *other*
-/// input methods like click and drag.
+/// Chose the word Swipe instead of Pan:
+///
+/// a) It can be useful outside of just Panning
+/// b) I was getting confused when trying to model Interactions, Gesture,
+/// State etc for CanvasKit and InteractionKit
 public class SwipeTrackingNSView: NSView {
-  var onSwipeGesture: SwipeOutputInternal = { _, _ in }
+  var onSwipeGesture: SwipeOutputInternal?
 
   public override func scrollWheel(with event: NSEvent) {
-
     let locationInView = convert(event.locationInWindow, from: nil)
     let delta = CGSize(width: event.scrollingDeltaX, height: event.scrollingDeltaY)
     let phase = InteractionPhase(from: event.phase)
@@ -27,9 +27,8 @@ public class SwipeTrackingNSView: NSView {
       delta: delta.screenSize,
       location: locationInView.screenPoint,
       phase: phase,
-//      modifiers: modifiers
     )
-    onSwipeGesture(eventData, modifiers)
+    onSwipeGesture?(eventData, modifiers)
   }
 }
 #endif

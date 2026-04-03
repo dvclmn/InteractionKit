@@ -5,9 +5,9 @@
 //  Created by Dave Coleman on 14/1/2026.
 //
 
-import SwiftUI
-import InteractionPrimitives
 import GeometryPrimitives
+import InteractionPrimitives
+import SwiftUI
 
 /// Callback receiving the drag payload and interaction phase.
 public typealias DragEventUpdate = (PointerDragPayload?, InteractionPhase) -> Void
@@ -43,6 +43,7 @@ public struct PointerDragModifier: ViewModifier {
   /// `onChange` never fires because `@State` preserves across re-renders.
   let behaviour: DragBehavior
 
+  let marqueeColour: Color
   let coordinateSpace: CoordinateSpace
   let minimumDistance: CGFloat
   let didUpdatePayload: DragEventUpdate
@@ -50,7 +51,11 @@ public struct PointerDragModifier: ViewModifier {
   public func body(content: Content) -> some View {
     content
       .gesture(dragGesture, isEnabled: behaviour.isEnabled)
-      .drawMarqueeRect(rect: marqueeRect?.cgRect, isEnabled: behaviour.isMarquee)
+      .drawMarqueeRect(
+        marqueeRect?.cgRect,
+        colour: marqueeColour,
+        isEnabled: behaviour.isMarquee,
+      )
       .onChange(of: behaviour, initial: true) { _, newValue in
         /// Update `DragGestureState` so it has the right behaviour
         dragState.behaviour = newValue
@@ -65,7 +70,7 @@ extension PointerDragModifier {
   private var dragGesture: some Gesture {
     DragGesture(
       minimumDistance: minimumDistance,
-      coordinateSpace: coordinateSpace
+      coordinateSpace: coordinateSpace,
     )
     .onChanged { gestureValue in
       let payload = dragState.update(gestureValue)

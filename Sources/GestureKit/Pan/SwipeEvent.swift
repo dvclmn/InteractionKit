@@ -8,8 +8,6 @@
 import InteractionPrimitives
 import GeometryPrimitives
 
-/// Note: This size comes as deltas, which will need to be accrued
-/// Modifiers == 'modifiers held'
 public typealias SwipeOutput = (SwipeEvent) -> Void
 public typealias SwipeOutputInternal = (SwipeEvent, Modifiers) -> Void
 
@@ -22,11 +20,3 @@ public struct SwipeEvent {
 extension SwipeEvent {
   public var isSwiping: Bool { phase.isActive }
 }
-//  public var interaction: Interaction {
-//    .init(
-//      kind: .swiping(delta: delta, location: location),
-//      phase: phase,
-//      modifiers: modifiers
-//    )
-//  }
-//}

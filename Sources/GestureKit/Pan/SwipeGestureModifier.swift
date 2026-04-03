@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import SwiftUI
 import InteractionPrimitives
+import SwiftUI
 
 #if canImport(AppKit)
 
@@ -25,8 +25,9 @@ public struct SwipeGestureModifier: ViewModifier {
             self.modifiers = modifiers
             onSwipeGesture(event)
           }
-          //          SwipeGestureView(onSwipeGesture)
-          //          .environment(\.modifierKeys, [])
+          /// This adds the modifiers to the Environment. This is also done
+          /// separately by `InteractionPrimitives/ModifierKeysModifier`,
+          /// but thankfully they don't seem to clash
           .environment(\.modifierKeys, modifiers)
         }
 
@@ -34,15 +35,15 @@ public struct SwipeGestureModifier: ViewModifier {
   }
 }
 extension View {
-  /// Aka pan gesture
+  /// Typically used for Pan, but useful for other swipe-y things too
   public func onSwipeGesture(
     isEnabled: Bool = true,
-    _ onSwipeGesture: @escaping SwipeOutput
+    _ onSwipeGesture: @escaping SwipeOutput,
   ) -> some View {
     self.modifier(
       SwipeGestureModifier(
         isEnabled: isEnabled,
-        onSwipeGesture: onSwipeGesture
+        onSwipeGesture: onSwipeGesture,
       )
     )
   }

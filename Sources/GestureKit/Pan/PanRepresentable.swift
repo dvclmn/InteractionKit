@@ -10,7 +10,7 @@ import SwiftUI
 
 struct SwipeGestureView: NSViewRepresentable {
   let onSwipeGesture: SwipeOutputInternal
-  
+
   init(_ onSwipeGesture: @escaping SwipeOutputInternal) {
     self.onSwipeGesture = onSwipeGesture
   }
