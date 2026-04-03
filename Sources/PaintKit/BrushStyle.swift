@@ -20,7 +20,7 @@ import CoreGraphics
 /// - ``maxSpeed`` should be calibrated to typical fast strokes on your
 ///   trackpad. Values around 1000–2000 pt/s work well in practice.
 ///
-public struct BrushStyle: Sendable {
+public struct BrushStyle: Sendable, Codable, Equatable {
   /// Width when the finger is moving slowly or at rest.
   public var maxWidth: CGFloat
 
@@ -40,7 +40,7 @@ public struct BrushStyle: Sendable {
     maxWidth: CGFloat = 18,
     minWidth: CGFloat = 1.5,
     maxSpeed: CGFloat = 1400,
-    speedCurve: CGFloat = 0.45
+    speedCurve: CGFloat = 0.45,
   ) {
     self.maxWidth = maxWidth
     self.minWidth = minWidth
@@ -52,21 +52,24 @@ public struct BrushStyle: Sendable {
   public func width(for speed: CGFloat) -> CGFloat {
     let normalised = min(speed / maxSpeed, 1)
     let curved = pow(normalised, speedCurve)
-    // Higher speed → higher curved → closer to minWidth
+    /// Higher speed → higher curved → closer to minWidth
     return maxWidth - curved * (maxWidth - minWidth)
   }
 }
 
 extension BrushStyle {
+
+  public static let `default`: Self = .expressive
+
   /// A thin, precise feel — suitable for inking or technical drawing.
-  public static let precise = BrushStyle(maxWidth: 6, minWidth: 1, maxSpeed: 1200, speedCurve: 0.5)
+  public static let precise: Self = .init(maxWidth: 6, minWidth: 1, maxSpeed: 1200, speedCurve: 0.5)
 
   /// A loose, expressive brush — wide at rest, very thin when fast.
-  public static let expressive = BrushStyle(maxWidth: 28, minWidth: 1, maxSpeed: 1600, speedCurve: 0.3)
+  public static let expressive: Self = .init(maxWidth: 28, minWidth: 1, maxSpeed: 1600, speedCurve: 0.3)
 
   /// Uniform width — velocity has no effect. Useful for debugging or a
   /// pen-like feel.
-  public static func constant(_ width: CGFloat) -> BrushStyle {
-    BrushStyle(maxWidth: width, minWidth: width, maxSpeed: 1, speedCurve: 1)
+  public static func constant(_ width: CGFloat) -> Self {
+    .init(maxWidth: width, minWidth: width, maxSpeed: 1, speedCurve: 1)
   }
 }

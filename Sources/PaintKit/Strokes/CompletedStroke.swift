@@ -12,9 +12,9 @@ import LilyPad
 public struct CompletedStroke: Identifiable {
   public let id: UUID = UUID()
 
-  /// The points that make up this stroke, in capture order.
-  public let points: [StrokePoint]
-
   /// Which finger drew this stroke (for colour assignment, etc.).
   public let touchOrder: Int
+  
+  /// The points that make up this stroke, in capture order.
+  public let points: [StrokePoint]
 }

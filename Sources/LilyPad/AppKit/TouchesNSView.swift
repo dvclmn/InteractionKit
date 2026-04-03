@@ -33,7 +33,8 @@ class TrackpadTouchesNSView: NSView {
     let touches = touchManager.processTouches(
       event.allTouches(),
       timestamp: event.timestamp,
-      in: .view(frame.size)
+      in: .normalised
+//      in: .view(frame.size)
     )
     onTouchesChanged(touches)
   }

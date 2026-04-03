@@ -24,7 +24,7 @@ extension Array where Element == CGPoint {
       i += stride
     }
 
-    if let last = last, result.last != last {
+    if let last, result.last != last {
       result.append(last)
     }
 

@@ -18,4 +18,7 @@ public struct ActiveStroke: Identifiable {
 
   /// Points accumulated so far during this contact.
   public var points: [StrokePoint]
+  
+  
+  
 }

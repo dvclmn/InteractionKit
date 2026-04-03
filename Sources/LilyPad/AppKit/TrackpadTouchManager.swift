@@ -30,7 +30,7 @@ class TrackpadTouchManager {
   var smoothingFactor: CGFloat = 0.3
 
   enum CoordinateSpace {
-    case normalized
+    case normalised
     case view(CGSize)
   }
 
@@ -131,8 +131,7 @@ class TrackpadTouchManager {
   ) -> CGPoint {
     let normalised = touch.normalizedPosition
     return switch space {
-      case .normalized:
-        normalised
+      case .normalised: normalised
       case .view(let size):
         CGPoint(
           x: size.width * normalised.x,

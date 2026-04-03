@@ -3,8 +3,8 @@
 //  LilyPadDemo
 //
 
-import SwiftUI
 import LilyPad
+import SwiftUI
 
 @Observable
 public final class StrokeEngine {
@@ -14,8 +14,6 @@ public final class StrokeEngine {
 
   /// Strokes that have been completed (finger lifted).
   public private(set) var completedStrokes: [CompletedStroke] = []
-
-  // MARK: - Configuration
 
   /// Minimum distance (in points) between consecutive stroke points.
   /// Higher values reduce point density and improve performance at the cost of resolution.
@@ -105,8 +103,8 @@ extension StrokeEngine {
 
     completedStrokes.append(
       CompletedStroke(
-        points: stroke.points,
         touchOrder: stroke.touchOrder,
+        points: stroke.points,
       ))
   }
 }
