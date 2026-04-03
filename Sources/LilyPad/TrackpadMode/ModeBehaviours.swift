@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 1/4/2026.
 //
 
-extension DrawingMode {
+extension TrackpadMode {
   /// Pointer behaviours that can be independently toggled.
   public struct Behaviours: OptionSet, Sendable {
     public let rawValue: Int

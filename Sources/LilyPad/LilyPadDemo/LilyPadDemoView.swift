@@ -13,12 +13,12 @@ import SwiftUI
 ///
 /// `DrawingCanvas` renders the strokes using SwiftUI Canvas.
 ///
-/// Additionally, `DrawingMode` manages the pointer behaviour.
+/// Additionally, `TrackpadMode` manages the pointer behaviour.
 /// This involves hiding/locking the cursor while drawing so it doesn't interfere
 /// with the trackpad-based absolute positioning experience.
 public struct LilyPadDemoView: View {
   @State private var engine = StrokeEngine()
-  @State private var drawingMode = DrawingMode()
+  @State private var drawingMode = TrackpadMode()
   @State private var showIndicators = true
 
   public init() {}
@@ -32,7 +32,7 @@ public struct LilyPadDemoView: View {
       ) { touches in
         engine.processTouches(touches)
       }
-      .drawingMode(drawingMode)
+      .trackpadMode(drawingMode)
 
       .overlay(alignment: .bottomLeading) {
         StatsOverlay()

@@ -9,17 +9,6 @@ import SwiftUI
 
 /// View modifier that overlays trackpad touch capture on any view.
 ///
-/// Usage:
-/// ```swift
-/// MyDrawingCanvas()
-///   .trackpadTouches { touches in
-///     // `touches` is [TouchPoint], ordered by first contact time
-///     for touch in touches {
-///       print("Finger \(touch.touchOrder): \(touch.position)")
-///     }
-///   }
-/// ```
-///
 /// Enable `showIndicators` for a visual debug overlay showing numbered
 /// finger positions on the trackpad.
 struct TrackpadTouchesModifier: ViewModifier {

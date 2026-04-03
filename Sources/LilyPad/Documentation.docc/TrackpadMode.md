@@ -1,4 +1,4 @@
-# DrawingMode
+# TrackpadMode
 
 Manages pointer behaviour for absolute-position trackpad drawing.
 
@@ -13,19 +13,19 @@ Pointer state (`NSCursor.hide`, `CGAssociateMouseAndMouseCursorPosition`)
 is process-global. A SwiftUI modifier's lifecycle doesn't map cleanly to
 process-global state — `.task(id:)` can re-fire, views can be recreated,
 etc. This class owns the state explicitly with balanced engage/disengage
-calls, and a companion modifier (``DrawingModeModifier``) handles the
+calls, and a companion modifier (``TrackpadModeModifier``) handles the
 SwiftUI lifecycle hookup.
 
 ## Usage
 
 ```swift
-@State private var drawingMode = DrawingMode()
+@State private var trackpadMode = TrackpadMode()
 
 MyCanvas()
   .trackpadTouches { touches in engine.processTouches(touches) }
-  .drawingMode(drawingMode)
+  .trackpadMode(trackpadMode)
   .toolbar {
-    Toggle("Draw", isOn: $drawingMode.isActive)
+    Toggle("Draw", isOn: $trackpadMode.isActive)
   }
 ```
 

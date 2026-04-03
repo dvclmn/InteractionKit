@@ -1,5 +1,5 @@
 //
-//  DrawingMode.swift
+//  TrackpadMode.swift
 //  LilyPad
 //
 //  Created by Dave Coleman on 2025.
@@ -11,7 +11,7 @@ import SwiftUI
 
 @MainActor
 @Observable
-public final class DrawingMode {
+public final class TrackpadMode {
 
   /// Whether drawing mode is currently active.
   /// Setting this to `true` hides and locks the cursor; `false` restores it.
@@ -57,13 +57,13 @@ public final class DrawingMode {
   }
 
   /// Note: no deinit — cleanup is handled by `tearDown()`, which the
-  /// `.drawingMode(_:)` modifier calls on disappear. Always pair this
-  /// class with `DrawingModeModifier` to ensure correct cleanup.
+  /// `.trackpadMode(_:)` modifier calls on disappear. Always pair this
+  /// class with `TrackpadModeModifier` to ensure correct cleanup.
 }
 
 // MARK: - Lifecycle (called by the modifier)
 
-extension DrawingMode {
+extension TrackpadMode {
 
   /// Install app activation observers. Called once when the modifier appears.
   func setUp() {
@@ -109,7 +109,7 @@ extension DrawingMode {
 
 // MARK: - Engage / Disengage
 
-extension DrawingMode {
+extension TrackpadMode {
 
   private func engage() {
     /// Save current cursor position for restoration later.
@@ -139,7 +139,7 @@ extension DrawingMode {
 
 // MARK: - App activation
 
-extension DrawingMode {
+extension TrackpadMode {
 
   /// When the app loses focus, always disengage pointer control — the user
   /// needs their cursor back to interact with other apps. We don't clear
@@ -165,7 +165,7 @@ extension DrawingMode {
 }
 
 // MARK: - Cursor Helpers
-extension DrawingMode {
+extension TrackpadMode {
 
   // MARK: Cursor hiding (balanced)
 
