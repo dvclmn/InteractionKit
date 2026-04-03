@@ -33,7 +33,7 @@ struct TrackpadTouchesModifier: ViewModifier {
         if showIndicators {
           TouchIndicatorsView(
             touches: touches,
-            containerSize: proxy.size
+            containerSize: proxy.size,
           )
         }
       }
@@ -54,13 +54,13 @@ extension View {
   public func trackpadTouches(
     isEnabled: Bool = true,
     showIndicators: Bool = true,
-    onUpdate: @escaping TouchesUpdate
+    onUpdate: @escaping TouchesUpdate,
   ) -> some View {
     self.modifier(
       TrackpadTouchesModifier(
         isEnabled: isEnabled,
         showIndicators: showIndicators,
-        onUpdate: onUpdate
+        onUpdate: onUpdate,
       )
     )
   }

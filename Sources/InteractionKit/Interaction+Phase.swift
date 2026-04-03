@@ -32,8 +32,10 @@ public enum InteractionPhase: String, Sendable, Codable {
   //  case any
 
   /// `moved` and `touching` are aliases in NSTouch terms
+  /// I'm choosing `stationary` as an alias for `NSTouch/isResting`
   public static let moved: Self = .changed
   public static let touching: Self = .mayBegin
+  public static let isResting: Self = .stationary
 }
 
 extension InteractionPhase {
