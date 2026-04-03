@@ -12,7 +12,6 @@ extension EnvironmentValues {
   @Entry public var panOffset: CGSize = .zero
   @Entry public var rotation: Angle = .zero
 
-  // MARK: - Zoom
   @Entry public var zoomLevel: Double = 1.0
   @Entry public var zoomRange: ClosedRange<Double>?
 
@@ -23,4 +22,22 @@ extension EnvironmentValues {
   }
 
   @Entry public var pointerStyle: PointerStyleCompatible?
+
+  /// Aka artwork size, document size
+  //  @Entry public var canvasSize: Size<CanvasSpace>?
+  @Entry public var artworkFrameInViewport: Rect<ScreenSpace>?
+  public var coordinateSpaceMapper: CoordinateSpaceMapper? {
+    guard let artworkFrameInViewport, let zoomRange else { return nil }
+    return .init(
+      artworkFrame: artworkFrameInViewport,
+      zoom: zoomLevel,
+      //      zoom: transform.scale,
+      zoomRange: zoomRange,
+    )
+  }
+  //  @Entry public var coordinateSpaceMapper: CoordinateSpaceMapper?
+
+  /// The hover location in resolved CanvasSpace (before pan/zoom)
+  @Entry public var pointerLocation: CGPoint?
+
 }

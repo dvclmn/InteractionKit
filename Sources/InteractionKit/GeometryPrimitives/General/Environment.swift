@@ -8,12 +8,21 @@
 import SwiftUI
 
 extension EnvironmentValues {
-
-  /// Aka artwork size, document size
-//  @Entry public var canvasSize: Size<CanvasSpace>?
+//
+//  /// Aka artwork size, document size
+//  //  @Entry public var canvasSize: Size<CanvasSpace>?
 //  @Entry public var artworkFrameInViewport: Rect<ScreenSpace>?
-
-  /// The hover location in resolved CanvasSpace (before pan/zoom)
-  @Entry public var pointerLocation: CGPoint?
+//  public var coordinateSpaceMapper: CoordinateSpaceMapper? {
+//    guard let artworkFrameInViewport, let zoomRange else { return nil }
+//    return .init(
+//      artworkFrame: artworkFrame,
+//      zoom: transform.scale,
+//      zoomRange: zoomRange,
+//    )
+//  }
+//  //  @Entry public var coordinateSpaceMapper: CoordinateSpaceMapper?
+//
+//  /// The hover location in resolved CanvasSpace (before pan/zoom)
+//  @Entry public var pointerLocation: CGPoint?
 
 }
