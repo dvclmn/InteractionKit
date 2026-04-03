@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 14/1/2026.
 //
 
-import GeometryPrimitives
+import InteractionPrimitives
 import InteractionPrimitives
 import SwiftUI
 

@@ -6,7 +6,7 @@
 //
 
 import CoreGraphics
-import GeometryPrimitives
+import InteractionPrimitives
 
 public struct PointerState: Sendable, Equatable {
   public var tap: Point<ScreenSpace>?

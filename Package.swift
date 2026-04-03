@@ -13,18 +13,17 @@ let package = Package(
       targets: [
         "GestureKit",
         "InteractionPrimitives",
-        "GeometryPrimitives",
         "LilyPad",
       ],
     )
   ],
+  dependencies: [
+    .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
+  ],
 
   targets: [
     .target(
-      name: "InteractionPrimitives",
-      dependencies: [
-        .module(.geometryPrimitives)
-      ],
+      name: "InteractionPrimitives"
     ),
     .target(
       name: "GestureKit",
@@ -33,13 +32,9 @@ let package = Package(
       ],
     ),
     .target(
-      name: "GeometryPrimitives"
-    ),
-    .target(
       name: "LilyPad",
       dependencies: [
-        .module(.interactionPrimitives),
-        .module(.geometryPrimitives),
+        .module(.interactionPrimitives)
       ],
     ),
     .testTarget(
@@ -58,12 +53,10 @@ extension String { static let baseHelpers = "BaseHelpers" }
 
 enum InternalModule {
   case interactionPrimitives
-  case geometryPrimitives
 
   var name: String {
     switch self {
       case .interactionPrimitives: ("InteractionPrimitives")
-      case .geometryPrimitives: ("GeometryPrimitives")
     }
   }
 }

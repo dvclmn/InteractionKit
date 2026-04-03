@@ -6,7 +6,7 @@
 //
 
 import InteractionPrimitives
-import GeometryPrimitives
+import InteractionPrimitives
 
 public typealias SwipeOutput = (SwipeEvent) -> Void
 public typealias SwipeOutputInternal = (SwipeEvent, Modifiers) -> Void
