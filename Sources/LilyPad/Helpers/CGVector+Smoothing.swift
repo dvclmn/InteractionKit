@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import InteractionPrimitives
+import InteractionKit
 
 extension CGVector {
 

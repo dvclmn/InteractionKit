@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import InteractionPrimitives
+import InteractionKit
 
 public enum PointerDragPayload: Sendable, Equatable {
 

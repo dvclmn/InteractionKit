@@ -6,7 +6,7 @@
 //
 
 import AppKit
-import InteractionPrimitives
+import InteractionKit
 
 /// Processes raw `NSTouch` events into ordered `TouchPoint` values with
 /// smoothed velocity and stable finger numbering.

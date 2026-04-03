@@ -3,7 +3,7 @@
 //  LilyPadDemo
 //
 
-import InteractionPrimitives
+import InteractionKit
 import SwiftUI
 
 public struct DrawingCanvas: View {

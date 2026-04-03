@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 24/6/2025.
 //
 
-import InteractionPrimitives
+import InteractionKit
 import SwiftUI
 
 #if canImport(AppKit)
@@ -26,7 +26,7 @@ public struct SwipeGestureModifier: ViewModifier {
             onSwipeGesture(event)
           }
           /// This adds the modifiers to the Environment. This is also done
-          /// separately by `InteractionPrimitives/ModifierKeysModifier`,
+          /// separately by `InteractionKit/ModifierKeysModifier`,
           /// but thankfully they don't seem to clash
           .environment(\.modifierKeys, modifiers)
         }

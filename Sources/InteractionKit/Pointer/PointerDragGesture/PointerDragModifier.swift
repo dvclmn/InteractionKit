@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 14/1/2026.
 //
 
-import InteractionPrimitives
-import InteractionPrimitives
+import InteractionKit
+import InteractionKit
 import SwiftUI
 
 /// Callback receiving the drag payload and interaction phase.

@@ -11,8 +11,7 @@ let package = Package(
     .library(
       name: "InteractionKit",
       targets: [
-//        "GestureKit",
-        "InteractionPrimitives",
+        "InteractionKit",
         "LilyPad",
       ],
     )
@@ -23,24 +22,19 @@ let package = Package(
 
   targets: [
     .target(
-      name: "InteractionPrimitives"
+      name: "InteractionKit"
     ),
-//    .target(
-//      name: "GestureKit",
-//      dependencies: [
-//        .module(.interactionPrimitives)
-//      ],
-//    ),
+
     .target(
       name: "LilyPad",
       dependencies: [
-        .module(.interactionPrimitives)
+        .module(.interactionKit)
       ],
     ),
-    .testTarget(
-      name: "GestureKitTests",
-      dependencies: ["GestureKit"],
-    ),
+//    .testTarget(
+//      name: "GestureKitTests",
+//      dependencies: ["GestureKit"],
+//    ),
   ],
 )
 
@@ -52,11 +46,11 @@ extension Target.Dependency {
 extension String { static let baseHelpers = "BaseHelpers" }
 
 enum InternalModule {
-  case interactionPrimitives
+  case interactionKit
 
   var name: String {
     switch self {
-      case .interactionPrimitives: ("InteractionPrimitives")
+      case .interactionKit: ("InteractionKit")
     }
   }
 }

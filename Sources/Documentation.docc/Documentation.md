@@ -1,4 +1,4 @@
 # InteractionKit
 
 ## LilyPad
-## InteractionPrimitives
+## InteractionKit

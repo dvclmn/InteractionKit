@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 14/1/2026.
 //
 
-import InteractionPrimitives
-import InteractionPrimitives
+import InteractionKit
+import InteractionKit
 import SwiftUI
 
 /// Internal state machine for ``PointerDragModifier``.

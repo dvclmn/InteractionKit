@@ -7,7 +7,7 @@
 
 #if canImport(AppKit)
 import AppKit
-import InteractionPrimitives
+import InteractionKit
 
 /// Chose the word Swipe instead of Pan:
 ///
