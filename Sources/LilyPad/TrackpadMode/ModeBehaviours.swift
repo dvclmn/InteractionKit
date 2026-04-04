@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 1/4/2026.
 //
 
-extension TrackpadMode {
+extension TrackpadModeHandler {
   
   /// Pointer behaviours that can be independently toggled.
   public struct Behaviours: OptionSet, Sendable {

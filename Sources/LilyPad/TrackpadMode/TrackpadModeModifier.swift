@@ -15,7 +15,7 @@ import SwiftUI
 /// Use the `.trackpadMode(_:)` view extension rather than applying this
 /// modifier directly.
 struct TrackpadModeModifier: ViewModifier {
-  let mode: TrackpadMode
+  let mode: TrackpadModeHandler
 
   func body(content: Content) -> some View {
     content
@@ -26,16 +26,16 @@ struct TrackpadModeModifier: ViewModifier {
 
 extension View {
 
-  /// Connects a ``TrackpadMode`` instance to this view's lifecycle.
+  /// Connects a ``TrackpadModeHandler`` instance to this view's lifecycle.
   ///
   /// When the view appears, app-activation observers are installed so that
   /// pointer lock/hide state is managed correctly across app switches.
   /// When the view disappears, everything is cleaned up.
   ///
-  /// Toggle ``TrackpadMode/isActive`` to engage or disengage drawing mode.
+  /// Toggle ``TrackpadModeHandler/isActive`` to engage or disengage drawing mode.
   ///
   /// ```swift
-  /// @State private var trackpadMode = TrackpadMode()
+  /// @State private var trackpadMode = TrackpadModeHandler()
   ///
   /// Canvas { context, size in /* ... */ }
   ///   .trackpadTouches { touches in /* ... */ }
@@ -44,7 +44,7 @@ extension View {
   ///     Toggle("Draw", isOn: $trackpadMode.isActive)
   ///   }
   /// ```
-  public func trackpadMode(_ mode: TrackpadMode) -> some View {
+  public func trackpadMode(_ mode: TrackpadModeHandler) -> some View {
     self.modifier(TrackpadModeModifier(mode: mode))
   }
 }

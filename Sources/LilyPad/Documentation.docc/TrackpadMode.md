@@ -19,7 +19,7 @@ SwiftUI lifecycle hookup.
 ## Usage
 
 ```swift
-@State private var trackpadMode = TrackpadMode()
+@State private var trackpadMode = TrackpadModeHandler()
 
 MyCanvas()
   .trackpadTouches { touches in engine.processTouches(touches) }

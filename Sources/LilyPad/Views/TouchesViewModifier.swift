@@ -15,29 +15,32 @@ struct TrackpadTouchesModifier: ViewModifier {
   @State private var touches: [TouchPoint] = []
 
   let isEnabled: Bool
-  let showIndicators: Bool
-  let onUpdate: TouchesUpdate
+  let showsIndicators: Bool
+  let action: TouchesUpdate
 
   func body(content: Content) -> some View {
-    GeometryReader { proxy in
-      content
-
-      if isEnabled {
-        TrackpadTouchesView { incoming in
-          onUpdate(incoming)
-          if showIndicators {
-            touches = incoming
+    //    GeometryReader { proxy in
+    content
+      .overlay {
+        if isEnabled {
+          TrackpadTouchesView { incoming in
+            action(incoming)
+            if showsIndicators {
+              touches = incoming
+            }
           }
         }
 
-        if showIndicators {
+        if isEnabled, showsIndicators {
           TouchIndicatorsView(
-            touches: touches,
-            containerSize: proxy.size,
+            touches: touches
+              //            containerSize: proxy.size,
           )
         }
-      }
-    }
+
+      }  // END overlay
+
+    //    }
   }
 }
 
@@ -49,18 +52,18 @@ extension View {
   ///   - isEnabled: Whether touch capture is active. Default `true`.
   ///   - showIndicators: Show a debug overlay with numbered finger positions.
   ///     Default `true`.
-  ///   - onUpdate: Called each time touches change, with an array of
+  ///   - action: Called each time touches change, with an array of
   ///     ``TouchPoint`` values sorted by first-contact order.
   public func trackpadTouches(
     isEnabled: Bool = true,
-    showIndicators: Bool = true,
-    onUpdate: @escaping TouchesUpdate,
+    showsIndicators: Bool = true,
+    perform action: @escaping TouchesUpdate,
   ) -> some View {
     self.modifier(
       TrackpadTouchesModifier(
         isEnabled: isEnabled,
-        showIndicators: showIndicators,
-        onUpdate: onUpdate,
+        showsIndicators: showsIndicators,
+        action: action,
       )
     )
   }
