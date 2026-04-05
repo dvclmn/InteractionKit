@@ -7,6 +7,7 @@
 
 import Foundation
 import InteractionKit
+import BasePrimitives
 
 extension CGVector {
 

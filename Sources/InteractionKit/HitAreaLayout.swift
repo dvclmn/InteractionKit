@@ -5,8 +5,8 @@
 //  Created by Dave Coleman on 29/3/2026.
 //
 
-import InteractionKit
 import SwiftUI
+import BasePrimitives
 
 public struct HitAreaLayout {
   let controlPoint: UnitPoint
