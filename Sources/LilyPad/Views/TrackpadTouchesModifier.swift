@@ -15,7 +15,7 @@ import SwiftUI
 struct TrackpadTouchesModifier: ViewModifier {
   @Environment(\.artworkFrameInViewport) private var artworkFrame
   @Environment(\.zoomClamped) private var zoomClamped
-  @State private var touches: [TouchPoint] = []
+  @State private var touchesForIndicators: [TouchPoint] = []
 
   let canvasSize: Size<CanvasSpace>
   let mode: TrackpadMode
@@ -29,26 +29,24 @@ struct TrackpadTouchesModifier: ViewModifier {
       .overlay {
         if mode.isEnabled {
           TrackpadTouchesView { touches in
-            //            guard let canvasSize else {
-            //              print("⚠️ Canvas size must be passed in via the Environment.")
-            //              return
-            //            }
+
             let mapped = mapping.mapTouches(touches, in: canvasSize)
             action(mapped)
 
             if showsIndicators {
-              self.touches = mapped
+              self.touchesForIndicators = mapped
             }
           }
         }
 
         if mode.isEnabled, showsIndicators {
-          TouchIndicatorsView(touches: touches)
+          TouchIndicatorsView(touches: touchesForIndicators)
         }
 
       }  // END overlay
 
       //    } // END geo reader
+
       .modifier(TrackpadModeModifier(mode: mode))
   }
 }
