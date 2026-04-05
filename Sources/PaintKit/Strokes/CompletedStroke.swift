@@ -17,4 +17,6 @@ public struct CompletedStroke: Identifiable {
   
   /// The points that make up this stroke, in capture order.
   public let points: [StrokePoint]
+  
+  public let style: BrushStyle
 }

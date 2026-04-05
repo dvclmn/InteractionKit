@@ -10,25 +10,25 @@ public struct DrawingCanvas: View {
   private let engine: StrokeEngine
 
   /// Controls speed-to-width mapping for all strokes.
-  private let brushStyle: BrushStyle
+//  private let brushStyle: BrushStyle
 
   /// Subdivisions per segment in the Catmull-Rom step. Higher = smoother
   /// curves but more points to process. 8 is a good default.
   private let catmullSteps: Int
 
   /// Colours assigned to fingers by their `touchOrder`.
-  private static let fingerColours: [Color] = [
-    .white, .blue, .green, .orange, .purple,
-    .red, .yellow, .cyan, .pink, .mint,
-  ]
+//  private static let fingerColours: [Color] = [
+//    .white, .blue, .green, .orange, .purple,
+//    .red, .yellow, .cyan, .pink, .mint,
+//  ]
 
   public init(
     engine: StrokeEngine,
-    brushStyle: BrushStyle = .init(),
+//    brushStyle: BrushStyle = .init(),
     catmullSteps: Int = 8,
   ) {
     self.engine = engine
-    self.brushStyle = brushStyle
+//    self.brushStyle = brushStyle
     self.catmullSteps = catmullSteps
   }
 
@@ -41,19 +41,19 @@ public struct DrawingCanvas: View {
       let bgRect = CGRect(origin: .zero, size: size)
       context.fill(Path(bgRect), with: .color(.black))
 
-      for stroke in engine.completedStrokes {
+      for stroke in engine.filteredStrokes(using: .distance(minSeparation: 6)) {
         renderStroke(
-          stroke.points,
+          for: .completed(stroke.style),
+          points: stroke.points,
           touchOrder: stroke.touchOrder,
-          opacity: 1,
           in: &context,
         )
       }
       for (_, stroke) in engine.activeStrokes {
         renderStroke(
-          stroke.points,
+          for: .active,
+          points: stroke.points,
           touchOrder: stroke.touchOrder,
-          opacity: 0.6,
           in: &context,
         )
       }
@@ -64,24 +64,31 @@ public struct DrawingCanvas: View {
 extension DrawingCanvas {
 
   private func renderStroke(
-    _ points: [StrokePoint],
+    for kind: StrokeKind,
+    points: [StrokePoint],
     touchOrder: Int,
-    opacity: Double,
+
     in context: inout GraphicsContext,
   ) {
     guard points.count >= 2 else { return }
 
-    let colour = Self.fingerColours[touchOrder % Self.fingerColours.count]
-    let path = buildPath(from: points)
-    context.fill(path, with: .color(colour.opacity(opacity)))
+    let placeholderColour: Color = .gray
+    let opacity = kind.isActive ? 0.6 : 1.0
+    let style = kind.style ?? engine.brushStyle
+
+    let path = buildPath(from: points, style: style)
+    context.fill(path, with: .color(placeholderColour.opacity(opacity)))
   }
 
-  private func buildPath(from points: [StrokePoint]) -> Path {
-    /// 1. Extract parallel arrays for positions and speed values
+  private func buildPath(
+    from points: [StrokePoint],
+    style: BrushStyle,
+  ) -> Path {
+    /// Extract parallel arrays for positions and speed values
     let positions = points.map(\.position)
     let speeds = points.map(\.speed)
 
-    /// 2. Densify using Catmull-Rom, interpolating both position and speed
+    /// Densify using Catmull-Rom, interpolating both position and speed
     /// in lockstep so width tracks the actual curve geometry
     let sampled = CatmullRom.sample(
       positions: positions,
@@ -89,13 +96,35 @@ extension DrawingCanvas {
       steps: catmullSteps,
     )
 
-    /// 3. Feed into the variable-width builder
-    var vwp = VariableWidthPath()
+    /// Feed into the variable-width builder
+    var path = VariableWidthPath()
     for (position, speed) in sampled {
-      vwp.addPoint(to: position, rawWidth: brushStyle.width(for: speed))
+      path.addPoint(
+        to: position,
+        rawWidth: style.width(for: speed),
+      )
     }
 
-    /// 4. Generate filled outline (smooth quad-curve edges)
-    return vwp.generatePath(usesSmoothCurves: true)
+    /// Generate filled outline (smooth quad-curve edges)
+    return path.generatePath(usesSmoothCurves: true)
+  }
+}
+
+enum StrokeKind {
+  case active
+  case completed(BrushStyle)
+
+  var isActive: Bool {
+    if case .active = self {
+      return true
+    }
+    return false
+  }
+
+  var style: BrushStyle? {
+    switch self {
+      case .active: nil
+      case .completed(let brushStyle): brushStyle
+    }
   }
 }

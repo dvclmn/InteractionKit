@@ -5,6 +5,8 @@
 //  Created by Dave Coleman on 4/4/2026.
 //
 
+/// Consider expanding to support `TrackpadMode.Behaviours`
+/// supplied as assoc. value etc
 public enum TrackpadMode {
 
   /// Trackpad touches enabled, standard pointer behaviour

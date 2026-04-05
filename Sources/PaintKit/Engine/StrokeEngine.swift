@@ -15,9 +15,7 @@ public final class StrokeEngine {
   /// Strokes that have been completed (finger lifted).
   public private(set) var completedStrokes: [CompletedStroke] = []
 
-  /// Minimum distance (in points) between consecutive stroke points.
-  /// Higher values reduce point density and improve performance at the cost of resolution.
-  public var minimumPointDistance: CGFloat = 2.0
+  public private(set) var brushStyle: BrushStyle = .default
 
   public init() {}
 }
@@ -29,7 +27,14 @@ extension StrokeEngine {
   /// Call this from the `.trackpadTouches()` callback every time touches
   /// update. The engine handles the full lifecycle: creating strokes on
   /// `began`, appending points on `changed`, and finalising on `ended`.
-  public func processTouches(_ touches: [TouchPoint]) {
+  public func processTouches(
+    _ touches: [TouchPoint],
+//    with style: BrushStyle,
+  ) {
+//    if brushStyle == nil {
+//      brushStyle = style
+//    }
+
     for touch in touches where !touch.isResting {
       switch touch.phase {
         case .began: beginStroke(for: touch)
@@ -66,7 +71,9 @@ extension StrokeEngine {
 
 extension StrokeEngine {
 
-  private func beginStroke(for touch: TouchPoint) {
+  private func beginStroke(
+    for touch: TouchPoint
+  ) {
     let point = StrokePoint(
       position: touch.position,
       speed: touch.magnitude,
@@ -82,12 +89,6 @@ extension StrokeEngine {
   private func continueStroke(for touch: TouchPoint) {
     guard var stroke = activeStrokes[touch.id] else { return }
 
-    if let last = stroke.points.last {
-      let dx = touch.position.x - last.position.x
-      let dy = touch.position.y - last.position.y
-      if sqrt(dx * dx + dy * dy) < minimumPointDistance { return }
-    }
-
     stroke.points.append(
       StrokePoint(
         position: touch.position,
@@ -98,13 +99,41 @@ extension StrokeEngine {
   }
 
   private func finishStroke(for touch: TouchPoint) {
-    guard let stroke = activeStrokes.removeValue(forKey: touch.id) else { return }
+//    defer { brushStyle = nil }
+    guard let stroke = activeStrokes.removeValue(forKey: touch.id)
+//      let style = brushStyle
+    else { return }
     guard stroke.points.count >= 2 else { return }
 
     completedStrokes.append(
       CompletedStroke(
         touchOrder: stroke.touchOrder,
         points: stroke.points,
-      ))
+        style: brushStyle,
+      )
+    )
+  }
+}
+
+// MARK: - Rendering helpers
+
+extension StrokeEngine {
+  /// Returns copies of completed strokes with their points filtered.
+  /// The engine's stored data stays untouched (raw, full-fidelity capture).
+  public func filteredStrokes(
+    using filter: StrokeFilterType
+  ) -> [CompletedStroke] {
+    switch filter {
+      case .none:
+        return completedStrokes
+      default:
+        return completedStrokes.map { stroke in
+          CompletedStroke(
+            touchOrder: stroke.touchOrder,
+            points: filter.applied(to: stroke.points),
+            style: stroke.style,
+          )
+        }
+    }
   }
 }

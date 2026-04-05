@@ -45,9 +45,9 @@ public final class TrackpadModeHandler {
 
   /// Which pointer behaviours to apply when drawing mode is active.
   /// Defaults to all three: hide, lock, and click suppression.
-  public var behaviours: Behaviours = .all
+  public var behaviours: TrackpadMode.Behaviours = .all
 
-  public init(behaviours: Behaviours = .all) {
+  public init(behaviours: TrackpadMode.Behaviours = .all) {
     self.behaviours = behaviours
   }
 
