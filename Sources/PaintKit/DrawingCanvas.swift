@@ -4,6 +4,7 @@
 //
 
 import InteractionKit
+import BasePrimitives
 import SwiftUI
 
 public struct DrawingCanvas: View {

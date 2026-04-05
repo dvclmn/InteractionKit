@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 extension Binding where Value == Size<ScreenSpace> {
   public var toBindingScreenRect: Binding<Rect<ScreenSpace>> {
     return Binding<Rect<ScreenSpace>> {
