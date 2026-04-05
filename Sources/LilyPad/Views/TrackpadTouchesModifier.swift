@@ -18,17 +18,20 @@ struct TrackpadTouchesModifier: ViewModifier {
   @State private var touchesForIndicators: [TouchPoint] = []
 
   let canvasSize: Size<CanvasSpace>
-  let mode: TrackpadMode
+  let trackpadMode: TrackpadMode
+  let trackpadMatchesZoom: Bool
   let mapping: TouchMapping
   let showsIndicators: Bool
   let action: TouchesUpdate
 
   func body(content: Content) -> some View {
-    //    GeometryReader { proxy in
     content
       .overlay {
-        if mode.isEnabled {
-          TrackpadTouchesView(isActive: mode.isEnabled) { touches in
+        if trackpadMode.isEnabled {
+          /// Note: When touch events are used for visual display, and the output
+          /// is displayed in a CanvasView, the
+          ///
+          TrackpadTouchesView(isActive: trackpadMode.isEnabled) { touches in
 
             let mapped = mapping.mapTouches(touches, in: canvasSize)
             action(mapped)
@@ -39,15 +42,13 @@ struct TrackpadTouchesModifier: ViewModifier {
           }
         }
 
-        if mode.isEnabled, showsIndicators {
+        if trackpadMode.isEnabled, showsIndicators {
           TouchIndicatorsView(touches: touchesForIndicators)
         }
 
       }  // END overlay
 
-      //    } // END geo reader
-
-      .modifier(TrackpadModeModifier(mode: mode))
+      .modifier(TrackpadModeModifier(mode: trackpadMode))
   }
 }
 
@@ -71,6 +72,7 @@ extension View {
   public func trackpadTouches(
     canvasSize: CGSize,
     mode: TrackpadMode = .inactive,
+    trackpadMatchesZoom: Bool,
     mapping: TouchMapping = .fit,
     showsIndicators: Bool = true,
     perform action: @escaping TouchesUpdate,
@@ -78,7 +80,8 @@ extension View {
     self.modifier(
       TrackpadTouchesModifier(
         canvasSize: .init(fromCGSize: canvasSize),
-        mode: mode,
+        trackpadMode: mode,
+        trackpadMatchesZoom: trackpadMatchesZoom,
         mapping: mapping,
         showsIndicators: showsIndicators,
         action: action,
