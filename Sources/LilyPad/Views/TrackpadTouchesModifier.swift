@@ -13,8 +13,6 @@ import SwiftUI
 /// Enable `showIndicators` for a visual debug overlay showing numbered
 /// finger positions on the trackpad.
 struct TrackpadTouchesModifier: ViewModifier {
-  @Environment(\.artworkFrameInViewport) private var artworkFrame
-  @Environment(\.zoomClamped) private var zoomClamped
   @State private var touchesForIndicators: [TouchPoint] = []
 
   let canvasSize: Size<CanvasSpace>
@@ -22,15 +20,13 @@ struct TrackpadTouchesModifier: ViewModifier {
   let trackpadMatchesZoom: Bool
   let mapping: TouchMapping
   let showsIndicators: Bool
+  let showsGuide: Bool
   let action: TouchesUpdate
 
   func body(content: Content) -> some View {
     content
       .overlay {
         if trackpadMode.isEnabled {
-          /// Note: When touch events are used for visual display, and the output
-          /// is displayed in a CanvasView, the
-          ///
           TrackpadTouchesView(isActive: trackpadMode.isEnabled) { touches in
 
             let mapped = mapping.mapTouches(touches, in: canvasSize)
@@ -46,18 +42,17 @@ struct TrackpadTouchesModifier: ViewModifier {
           TouchIndicatorsView(touches: touchesForIndicators)
         }
 
+        if trackpadMode.isEnabled, showsGuide,
+           let rect = mapping.mappedRect(in: canvasSize) {
+          TrackpadGuideView(mappedRect: rect)
+        }
+
       }  // END overlay
 
       .modifier(TrackpadModeModifier(mode: trackpadMode))
   }
 }
 
-extension TrackpadTouchesModifier {
-  private var coordinateSpaceMapper: CoordinateSpaceMapper? {
-    guard let artworkFrame else { return nil }
-    return .init(artworkFrame: artworkFrame, zoomClamped: zoomClamped)
-  }
-}
 
 extension View {
 
@@ -75,6 +70,7 @@ extension View {
     trackpadMatchesZoom: Bool,
     mapping: TouchMapping = .fit,
     showsIndicators: Bool = true,
+    showsGuide: Bool = false,
     perform action: @escaping TouchesUpdate,
   ) -> some View {
     self.modifier(
@@ -84,6 +80,7 @@ extension View {
         trackpadMatchesZoom: trackpadMatchesZoom,
         mapping: mapping,
         showsIndicators: showsIndicators,
+        showsGuide: showsGuide,
         action: action,
       )
     )

@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 4/4/2026.
 //
 
-import CoreGraphics
 import Foundation
 import InteractionKit
 
@@ -23,10 +22,11 @@ public enum TouchMapping {
 /// to match `Touch​Point`’s semantics.
 /// `magnitude` represents the magnitude of `velocity`.
 extension TouchMapping {
+
   func mapTouches(
     _ touches: [TouchPoint],
     in viewSize: Size<CanvasSpace>,
-    sourceAspectRatio: CGFloat = CGSize.trackpadAspectRatio
+    sourceAspectRatio: CGFloat = CGSize.trackpadAspectRatio,
   ) -> [TouchPoint] {
     /// Guard against invalid sizes
     guard viewSize.width > 0, viewSize.height > 0 else { return touches }
@@ -66,13 +66,13 @@ extension TouchMapping {
           let ySource = ny * sourceHeight
           let mappedPosition = CGPoint(
             x: offsetX + xSource * scale,
-            y: offsetY + (sourceHeight - ySource) * scale  // flip Y to top-left origin
+            y: offsetY + (sourceHeight - ySource) * scale,  // flip Y to top-left origin
           )
 
           /// Velocity should follow the same transform: scale X by `scale`, Y by `sourceHeight * scale`, and flip Y.
           let mappedVelocity = CGVector(
             dx: point.velocity.dx * scale,
-            dy: -point.velocity.dy * sourceHeight * scale
+            dy: -point.velocity.dy * sourceHeight * scale,
           )
 
           /// Scalar speed should be derived from the transformed velocity vector.
@@ -93,4 +93,3 @@ extension TouchMapping {
     }
   }
 }
-
