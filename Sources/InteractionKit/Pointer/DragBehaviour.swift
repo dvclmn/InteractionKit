@@ -10,6 +10,7 @@ import SwiftUI
 
 /// Defines the drag interaction mode applied by `PointerDragModifier`.
 public enum PointerDragBehaviour: Equatable, Sendable {
+//public enum PointerDragBehaviour: Equatable, Sendable {
 
   /// A transient selection rectangle drawn from the drag origin to the current
   /// pointer position. All state is cleared on drag end.

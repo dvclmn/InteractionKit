@@ -36,9 +36,11 @@ public struct PointerDragModifier: ViewModifier {
 
   /// The drag mode passed from the parent (via environment → modifier init).
   /// Stored as a `let` so SwiftUI refreshes it on every re-render, allowing
-  /// `onChange(of: behaviour)` to detect tool switches. Do NOT derive this
-  /// from `dragState.behaviour` — that creates a circular dependency where
-  /// `onChange` never fires because `@State` preserves across re-renders.
+  /// `onChange(of: behaviour)` to detect tool switches.
+  ///
+  /// Reminder to self: Do NOT derive this from `dragState.behaviour`
+  /// — that creates a circular dependency where `onChange` never fires
+  /// because `@State` preserves across re-renders.
   let behaviour: PointerDragBehaviour
 
   let marqueeColour: Color
