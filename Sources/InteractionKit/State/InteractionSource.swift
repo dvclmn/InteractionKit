@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Previously called `InteractionSource`
 /// Previously, despite the name "source", this type held actual state,
 /// values like drag rect and pointer location.
 ///
@@ -21,6 +22,7 @@ public enum Interaction: Sendable {
   case drag(PointerDragPayload)  // onPointerDragGesture
   case hover(Point<ScreenSpace>)  // onContinuousHover
 }
+
 
 /// The raw input source from a SwiftUI gesture modifier.
 ///

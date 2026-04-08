@@ -15,7 +15,7 @@ public struct InteractionContext: Sendable {
   public let phase: InteractionPhase
   public let modifiers: Modifiers
 
-  public init(
+  private init(
     interaction: Interaction,
     //    source: InteractionSource,
     phase: InteractionPhase = .none,
@@ -34,4 +34,6 @@ extension InteractionContext {
     guard case .drag = interaction else { return false }
     return phase.isActive
   }
+  
+  public static func make(for )
 }

@@ -17,14 +17,15 @@ public struct InteractionKinds: OptionSet, Sendable {
 
   public static let swipe = Self(rawValue: 1 << 0)
   public static let pinch = Self(rawValue: 1 << 1)
-  public static let pointerHover = Self(rawValue: 1 << 2)
-  public static let pointerTap = Self(rawValue: 1 << 3)
-  public static let pointerDrag = Self(rawValue: 1 << 4)
+  public static let rotation = Self(rawValue: 1 << 2)
+  public static let tap = Self(rawValue: 1 << 3)
+  public static let drag = Self(rawValue: 1 << 4)
+  public static let hover = Self(rawValue: 1 << 5)
 
   /// Default for `CanvasTool` input capabilities
-  public static let tapAndDrag: Self = [.pointerTap, .pointerDrag]
+  public static let tapAndDrag: Self = [.tap, .drag]
 
   public static let all: Self = [
-    .swipe, .pinch, .pointerHover, .pointerTap, .pointerDrag,
+    .swipe, .pinch, .rotation, .tap, .drag, .hover,
   ]
 }
