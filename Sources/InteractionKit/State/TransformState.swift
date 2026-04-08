@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct TransformState: Sendable, Equatable {
   public var translation: Size<ScreenSpace>
-  
+
   /// This value is not clamped. Should be done by the caller if required
   public var scale: Double
   public var rotation: Angle
@@ -24,8 +24,7 @@ public struct TransformState: Sendable, Equatable {
     self.rotation = rotation
   }
 
-  public static let initial: Self = .init()
-  public static var identity: Self { initial }
+  public static var identity: Self { .init() }
 }
 
 extension TransformState {

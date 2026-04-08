@@ -19,7 +19,7 @@ import SwiftUI
 ///
 /// Choose weights to control how horizontal and vertical movement contribute:
 /// - `.upRight`: right (+x) and up (-y) increase zoom; left and down decrease.
-/// - `.vertical`: down (+y) increases zoom; up decreases (matches existing swipe behavior).
+/// - `.vertical`: down (+y) increases zoom; up decreases (matches existing swipe behaviour).
 public enum ZoomComputation: Sendable {
 
   public struct Weights: Sendable {

@@ -29,7 +29,7 @@ extension View {
   ///   - didUpdatePayload: Callback receiving the drag payload and phase.
   public func onPointerDragGesture(
     coordinateSpace: CoordinateSpace = .local,
-    behaviour: DragBehavior,
+    behaviour: PointerDragBehaviour,
     marqueeColour: Color = .accentColor,
     minimumDistance: CGFloat = 5,
     didUpdatePayload: @escaping DragEventUpdate,

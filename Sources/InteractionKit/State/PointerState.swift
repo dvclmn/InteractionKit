@@ -7,6 +7,8 @@
 
 import CoreGraphics
 
+/// Raw locations/geometry in screen space, no
+/// coordinate space mapping applied
 public struct PointerState: Sendable, Equatable {
   public var tap: Point<ScreenSpace>?
   public var hover: Point<ScreenSpace>?

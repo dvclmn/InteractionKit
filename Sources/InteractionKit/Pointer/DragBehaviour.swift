@@ -1,16 +1,15 @@
 //
-//  DragBehaviour.swift
+//  PointerDragBehaviour.swift
 //  BaseHelpers
 //
 //  Created by Dave Coleman on 14/1/2026.
 //
 
-//import InteractionKit
 import BasePrimitives
 import SwiftUI
 
 /// Defines the drag interaction mode applied by `PointerDragModifier`.
-public enum DragBehavior: Equatable, Sendable {
+public enum PointerDragBehaviour: Equatable, Sendable {
 
   /// A transient selection rectangle drawn from the drag origin to the current
   /// pointer position. All state is cleared on drag end.
@@ -31,7 +30,7 @@ public enum DragBehavior: Equatable, Sendable {
   public static var continuous: Self { .continuous(axes: .all) }
 }
 
-extension DragBehavior {
+extension PointerDragBehaviour {
 
   public var name: String {
     switch self {

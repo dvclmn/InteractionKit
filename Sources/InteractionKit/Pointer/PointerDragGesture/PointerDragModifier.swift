@@ -39,7 +39,7 @@ public struct PointerDragModifier: ViewModifier {
   /// `onChange(of: behaviour)` to detect tool switches. Do NOT derive this
   /// from `dragState.behaviour` — that creates a circular dependency where
   /// `onChange` never fires because `@State` preserves across re-renders.
-  let behaviour: DragBehavior
+  let behaviour: PointerDragBehaviour
 
   let marqueeColour: Color
   let coordinateSpace: CoordinateSpace

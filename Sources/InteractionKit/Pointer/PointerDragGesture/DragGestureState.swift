@@ -10,7 +10,7 @@ import SwiftUI
 
 /// Internal state machine for ``PointerDragModifier``.
 ///
-/// Handles both ``DragBehavior/marquee`` and ``DragBehavior/continuous(_:)`` modes:
+/// Handles both ``PointerDragBehaviour/marquee`` and ``PointerDragBehaviour/continuous(_:)`` modes:
 ///
 /// ## Continuous
 /// Produces frame-to-frame deltas, the difference in
@@ -21,7 +21,7 @@ import SwiftUI
 /// values directly from `DragGesture.Value`. All state is cleared on end.
 struct DragGestureState {
 
-  var behaviour: DragBehavior = .none
+  var behaviour: PointerDragBehaviour = .none
 
   /// For continuous mode: the previous `DragGesture.Value.translation`,
   /// used to compute the frame-to-frame delta. `nil` on first frame.

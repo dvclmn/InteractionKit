@@ -17,8 +17,10 @@ extension EnvironmentValues {
   /// the `canvasSize` scaled by the current `zoomLevel`
   @Entry public var artworkFrameInViewport: Rect<ScreenSpace>?
 
-  /// The hover location in resolved CanvasSpace (before pan/zoom)
-  @Entry public var pointerLocation: Point<CanvasSpace>?
+  /// Note: See swift package `BasePrimitives` for zoom, pan and rotate
+
+  /// Pointer hover location in `CanvasSpace` (i.e. before pan/zoom)
+  @Entry public var pointerHover: Point<CanvasSpace>?
   @Entry public var pointerTap: Point<CanvasSpace>?
   @Entry public var pointerDrag: Rect<CanvasSpace>?
 

@@ -24,8 +24,8 @@ extension View {
   ///       the canvas, adding letterboxing if needed. Guarantees all touches stay in bounds.
   ///     - `.fill`: Scales uniformly to fill the canvas, cropping the trackpad area if needed.
   ///     - `.normalised`: Raw 0–1 normalized coordinates with no transformation.
-  ///   - mode: Controls trackpad capture behavior:
-  ///     - `.active`: Captures touches with standard pointer behavior.
+  ///   - mode: Controls trackpad capture behaviour:
+  ///     - `.active`: Captures touches with standard pointer behaviour.
   ///     - `.activePointerHidden`: Captures touches and hides the pointer to prevent
   ///       accidental clicks or focus loss.
   ///     - `.inactive` (default): Disables touch capture entirely.
