@@ -1,5 +1,5 @@
 //
-//  TransformInteraction.swift
+//  TransformAdjustment.swift
 //  CanvasKit
 //
 //  Created by Dave Coleman on 8/4/2026.
@@ -9,12 +9,12 @@ import SwiftUI
 
 /// Previously held by `CanvasAdjustment`
 /// Considering rename to `TransformAdjustment`
-public enum TransformInteraction {
+public enum TransformAdjustment: Sendable {
   case translation(Size<ScreenSpace>)
   case scale(Double)
   case rotation(Angle)
 }
-extension TransformInteraction {
+extension TransformAdjustment {
   public static func zoomAdjustment(
     for transform: TransformState,
     by factor: CGFloat,
