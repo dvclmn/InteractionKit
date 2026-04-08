@@ -10,17 +10,18 @@ import Foundation
 
 public struct InteractionContext: Sendable {
   public let interaction: Interaction
-  public let source: InteractionSource
+  //  public let interaction: Interaction
+  //  public let source: InteractionSource
   public let phase: InteractionPhase
   public let modifiers: Modifiers
 
   public init(
     interaction: Interaction,
-    source: InteractionSource,
+    //    source: InteractionSource,
     phase: InteractionPhase = .none,
     modifiers: Modifiers,
   ) {
-    self.source = source
+    //    self.source = source
     self.interaction = interaction
     self.phase = phase
     self.modifiers = modifiers
@@ -30,7 +31,7 @@ public struct InteractionContext: Sendable {
 extension InteractionContext {
   /// True when the last pointer interaction is an active drag.
   public var isPointerDragging: Bool {
-    guard case .drag = source else { return false }
+    guard case .drag = interaction else { return false }
     return phase.isActive
   }
 }

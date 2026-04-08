@@ -5,7 +5,6 @@
 //  Created by Dave Coleman on 16/3/2026.
 //
 
-import InteractionKit
 import SwiftUI
 
 /// Previously, despite the name "source", this type held actual state,
@@ -14,16 +13,14 @@ import SwiftUI
 /// These responsibilities have moved to types
 /// `TransformAdjustment` and `PointerAdjustment`
 /// in InteractionKit
-public enum InteractionSource: Sendable {
-  case swipe  // onSwipeGesture
-  case pinch  // onPinchGesture
-  case hover  // onContinuousHover
-  case tap  // onTapGesture
-  case drag  // onPointerDragGesture
-  case rotation  // Not yet supported
+public enum Interaction: Sendable {
+  case swipe(delta: Size<ScreenSpace>)  // onSwipeGesture
+  case pinch(scale: Double)  // onPinchGesture
+  case rotation(angle: Angle)  // Not yet supported
+  case tap(location: Point<ScreenSpace>)  // onTapGesture
+  case drag(PointerDragPayload)  // onPointerDragGesture
+  case hover(Point<ScreenSpace>)  // onContinuousHover
 }
-
-
 
 /// The raw input source from a SwiftUI gesture modifier.
 ///
