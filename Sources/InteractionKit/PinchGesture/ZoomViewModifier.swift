@@ -6,22 +6,13 @@
 //
 
 import SwiftUI
-import InteractionKit
 
-/// Return a replacement zoom value, or `nil` to accept the gesture's proposal.
-/// It may be that later I use this when doing more complex processing on the zoom
-/// value, for zooming around a focus point / cursor etc
-@available(
-  *, deprecated, renamed: "ZoomUpdate",
-  message: "Considering deprecating this more verbose Zoom event type, in favour of simple Double value"
-)
-public typealias ZoomEventUpdate = (ZoomGestureEvent, InteractionPhase) -> Double?
-
-/// Return a replacement zoom value for `(proposedZoom, phase)`, or `nil` to accept.
+/// Return a replacement zoom value for `(proposedZoom, phase)`,
+/// or `nil` to accept the gesture's proposal
 public typealias ZoomUpdate = (Double, InteractionPhase) -> Double?
 
-/// Converts `MagnifyGesture` into incremental zoom deltas and routes them
-/// through one of two ownership modes:
+/// Converts `MagnifyGesture` into incremental zoom deltas and
+/// routes them through one of two ownership modes:
 ///
 /// ## Mode A — Binding
 /// ```swift
@@ -63,7 +54,7 @@ public struct ZoomModifier: ViewModifier {
     initial: Double,
     zoom: Binding<Double>? = nil,
     isEnabled: Bool,
-    didUpdateZoom: @escaping ZoomUpdate
+    didUpdateZoom: @escaping ZoomUpdate,
   ) {
     self._internalZoom = State(initialValue: initial)
     self.externalZoom = zoom
@@ -94,52 +85,26 @@ extension ZoomModifier {
         }
         isGesturing = true
 
-        /// MagnifyGesture reports absolute scale since start; convert to delta.
-        let safeLast =
-          lastMagnification.isFiniteAndGreaterThanZero
-          ? lastMagnification
-          : 1
-
-        let delta = value.magnification / safeLast
+        let delta = getDelta(from: value)
         lastMagnification = value.magnification
 
         let previousZoom = internalZoom
         let proposedZoom = previousZoom * delta
 
-        //        let event = ZoomGestureEvent(
-        //          //          phase: .changed,
-        //          previousZoom: previousZoom,
-        //          proposedZoom: proposedZoom,
-        //          magnification: value.magnification,
-        //          magnificationDelta: delta,
-        //          isGestureStart: isGestureStart
-        //        )
-
-        let resolvedZoom = resolvedZoom(
-          //          for: event,
+        let resolved = resolvedZoom(
           phase: .changed,
-          proposed: proposedZoom
+          proposed: proposedZoom,
         )
-        commitZoom(resolvedZoom)
+        commitZoom(resolved)
       }
       .onEnded { value in
         let previousZoom = internalZoom
         let finalZoom = clamped(previousZoom)
-
-        //        let event = ZoomGestureEvent(
-        //          //          phase: .ended,
-        //          previousZoom: previousZoom,
-        //          proposedZoom: finalZoom,
-        //          magnification: value.magnification,
-        //          magnificationDelta: 1,
-        //          isGestureStart: false
-        //        )
-
-        let resolvedZoom = resolvedZoom(
+        let resolved = resolvedZoom(
           phase: .ended,
-          proposed: finalZoom
+          proposed: finalZoom,
         )
-        commitZoom(resolvedZoom)
+        commitZoom(resolved)
 
         isGesturing = false
         lastMagnification = 1
@@ -147,11 +112,20 @@ extension ZoomModifier {
   }
 
   private func resolvedZoom(
-    //    for event: ZoomGestureEvent,
     phase: InteractionPhase,
-    proposed: Double
+    proposed: Double,
   ) -> Double {
     clamped(didUpdateZoom(proposed, phase) ?? proposed)
+  }
+
+  /// MagnifyGesture reports absolute scale since start; convert to delta.
+  private func getDelta(from value: MagnifyGesture.Value) -> Double {
+    let safeLast =
+      lastMagnification.isFiniteAndGreaterThanZero
+      ? lastMagnification
+      : 1
+
+    return value.magnification / safeLast
   }
 
   private func clamped(_ value: Double) -> Double {

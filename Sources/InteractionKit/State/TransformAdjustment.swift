@@ -38,13 +38,26 @@ public enum TransformAdjustment: Sendable {
 }
 extension TransformAdjustment {
 
+  public func updatedState(_ current: TransformState) -> TransformState {
+    var new = current
+
+    switch self {
+      case .translation(let val): new.translation = val
+      case .scale(let val): new.scale = val
+      case .rotation(let val): new.rotation = val
+    }
+
+    return new
+
+  }
+
   public var supportedInteractions: InteractionKinds {
     switch self {
 
       /// Swipe is the default. Drag is typically via e.g. a Pan Tool
       case .translation: [.swipe, .drag]
-        
-        ///
+
+      ///
       case .scale: []
       case .rotation: []
     }

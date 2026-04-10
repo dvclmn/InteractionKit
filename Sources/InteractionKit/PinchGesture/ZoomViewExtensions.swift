@@ -55,7 +55,6 @@ extension View {
     initial: Double = 1,
     isEnabled: Bool = true,
     didUpdateZoom: @escaping ZoomUpdate
-//    didUpdateZoom: @escaping ZoomEventUpdate
   ) -> some View {
     self.modifier(
       ZoomModifier(
