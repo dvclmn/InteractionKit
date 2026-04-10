@@ -66,19 +66,26 @@ struct TrackpadTouchesModifier: ViewModifier {
 
 extension TrackpadTouchesModifier {
 
-  private var guideRect: TrackpadMappedRect? {
-    guard let viewSize = viewportRect?.size else {
-      return nil
+  private var trackpadMappedSize: Size<ScreenSpace>? {
+    //    guard let viewSize = viewportRect?.size else {
+    //      return nil
+    //    }
+    //    let viewSize = viewportRect?.size
+    let viewSize: Size<ScreenSpace>
+    if let viewportSize = viewportRect?.size {
+      viewSize = .init(fromCGSize: viewportSize)
+    } else {
+      viewSize = .init(width: canvasSize.width, height: canvasSize.height)
     }
-    return .makeRect(
-      in: Size(fromCGSize: viewSize),
+    return TrackpadMappedSize.makeRect(
+      in: viewSize,
       mapping: mapping,
       sourceAspectRatio: CGSize.trackpadAspectRatio,
     )
   }
 
   private func handleTouches(_ touches: [TouchPoint]) {
-    let mapped = mapping.mapTouches(touches, in: canvasSize)
+    let mapped = mapping.mapTouches(touches, in: trackpadMappedSize)
     action(mapped)
 
     if showsTouchIndicators {
