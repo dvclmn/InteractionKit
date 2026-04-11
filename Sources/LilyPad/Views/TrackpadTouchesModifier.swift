@@ -40,11 +40,11 @@ struct TrackpadTouchesModifier: ViewModifier {
           TouchIndicatorsView(touches: touchesForIndicators)
         }
 
-        if guideVisibility.shouldShowGuide(for: trackpadMode), let guideRect {
+        if guideVisibility.shouldShowGuide(for: trackpadMode), let trackpadMappedSize {
           AreaOutlineShape(colour: .mint, rounding: 4, lineWidth: 1)
             .frame(
-              width: guideRect.size.width,
-              height: guideRect.size.height,
+              width: trackpadMappedSize.rect.size.width,
+              height: trackpadMappedSize.rect.size.height,
             )
             .allowsHitTesting(false)
           //          .areaOutline(
@@ -66,26 +66,36 @@ struct TrackpadTouchesModifier: ViewModifier {
 
 extension TrackpadTouchesModifier {
 
-  private var trackpadMappedSize: Size<ScreenSpace>? {
+  private var trackpadMappedSize: TrackpadMappedRect? {
+    guard let viewSize = viewportRect?.size else { return nil }
+    
+    //  private var trackpadMappedSize: Size<ScreenSpace>? {
     //    guard let viewSize = viewportRect?.size else {
     //      return nil
     //    }
     //    let viewSize = viewportRect?.size
-    let viewSize: Size<ScreenSpace>
-    if let viewportSize = viewportRect?.size {
-      viewSize = .init(fromCGSize: viewportSize)
-    } else {
-      viewSize = .init(width: canvasSize.width, height: canvasSize.height)
-    }
-    return TrackpadMappedSize.makeRect(
-      in: viewSize,
+//    let viewSize: Size<ScreenSpace>
+    
+//    if let viewportSize = viewportRect?.size {
+//      viewSize = .init(fromCGSize: viewportSize)
+//    } else {
+//      viewSize = .init(width: canvasSize.width, height: canvasSize.height)
+//    }
+    return TrackpadMappedRect.makeRect(
+      in: .init(fromCGSize: viewSize),
+//      in: viewSize,
       mapping: mapping,
       sourceAspectRatio: CGSize.trackpadAspectRatio,
     )
   }
 
   private func handleTouches(_ touches: [TouchPoint]) {
-    let mapped = mapping.mapTouches(touches, in: trackpadMappedSize)
+    guard let trackpadMappedSize else { return }
+    //    let mapped = mapping.mapTouches(touches, in: trackpadMappedSize)
+    let mapped = mapping.mapTouches(
+      touches,
+      in: trackpadMappedSize,
+    )
     action(mapped)
 
     if showsTouchIndicators {
