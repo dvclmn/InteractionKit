@@ -7,7 +7,7 @@
 
 //import BasePrimitives
 @_spi(Internals) import BasePrimitives
-import InteractionKit
+//import InteractionKit
 import SwiftUI
 
 /// View modifier that overlays trackpad touch capture on any view.
