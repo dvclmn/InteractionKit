@@ -1,6 +1,6 @@
 //
 //  CGVector+Smoothing.swift
-//  LilyPad
+//  Lilypad
 //
 //  Created by Dave Coleman on 28/3/2026.
 //

@@ -1,9 +1,9 @@
 //
 //  StrokeEngine.swift
-//  LilyPadDemo
+//  LilypadDemo
 //
 
-import LilyPad
+import Lilypad
 import SwiftUI
 
 @Observable

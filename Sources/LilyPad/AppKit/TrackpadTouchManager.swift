@@ -1,6 +1,6 @@
 //
 //  TrackpadTouchManager.swift
-//  LilyPad
+//  Lilypad
 //
 //  Created by Dave Coleman on 3/5/2025.
 //

@@ -5,7 +5,7 @@
 //  Created by Dave Coleman on 3/4/2026.
 //
 import Foundation
-import LilyPad
+import Lilypad
 
 /// A stroke currently being drawn — accumulating points while a finger is down.
 public struct ActiveStroke: Identifiable, StrokeData {

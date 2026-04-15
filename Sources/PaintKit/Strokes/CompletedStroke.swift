@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import LilyPad
+import Lilypad
 
 /// A finished stroke — the finger has lifted and the points are final.
 public struct Stroke: Hashable, Codable, Sendable, Identifiable, StrokeData {

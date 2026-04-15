@@ -1,12 +1,12 @@
 //
 //  ContentView.swift
-//  LilyPadDemo
+//  LilypadDemo
 //
 
 import SwiftUI
-import LilyPad
+import Lilypad
 
-/// LilyPad (`.trackpadTouches`) captures raw multi-touch input and
+/// Lilypad (`.trackpadTouches`) captures raw multi-touch input and
 /// delivers ordered `[TouchPoint]` with stable finger numbering.
 ///
 /// `StrokeEngine` accumulates those touches into active and completed

@@ -1,6 +1,6 @@
 //
 //  TrackpadModeHandler.swift
-//  LilyPad
+//  Lilypad
 //
 //  Created by Dave Coleman on 2025.
 //

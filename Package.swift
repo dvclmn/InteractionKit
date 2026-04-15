@@ -12,7 +12,7 @@ let package = Package(
       name: "InteractionKit",
       targets: [
 //        "InteractionKit",
-        "LilyPad",
+        "Lilypad",
         "PaintKit",
       ],
     )
@@ -33,13 +33,13 @@ let package = Package(
     .target(
       name: "PaintKit",
       dependencies: [
-        "LilyPad"
-//        .module(.lilyPad)
+        "Lilypad"
+//        .module(.lilypad)
       ],
     ),
 
     .target(
-      name: "LilyPad",
+      name: "Lilypad",
       dependencies: ["BasePrimitives"],
     ),
     //    .testTarget(
@@ -58,12 +58,12 @@ extension String { static let baseHelpers = "BaseHelpers" }
 
 enum InternalModule {
 //  case interactionKit
-  case lilyPad
+  case lilypad
 
   var name: String {
     switch self {
 //      case .interactionKit: ("InteractionKit")
-      case .lilyPad: ("LilyPad")
+      case .lilypad: ("Lilypad")
     }
   }
 }

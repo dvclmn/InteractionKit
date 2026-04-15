@@ -1,6 +1,6 @@
 //
 //  Model+TouchPoint.swift
-//  LilyPad
+//  Lilypad
 //
 //  Created by Dave Coleman on 5/5/2025.
 //

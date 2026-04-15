@@ -1,6 +1,6 @@
 //
 //  CGPoint+Sample.swift
-//  LilyPad
+//  Lilypad
 //
 //  Created by Dave Coleman on 31/3/2026.
 //

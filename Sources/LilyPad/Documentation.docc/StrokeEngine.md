@@ -1,6 +1,6 @@
 # Stroke Engine
 
-Processes touch input from LilyPad into drawable strokes.
+Processes touch input from Lilypad into drawable strokes.
 
 Feed `[TouchPoint]` from the `.trackpadTouches()` modifier into
 ``processTouches(_:)`` each frame. The engine manages active strokes

@@ -1,4 +1,4 @@
-# ``LilyPad``
+# ``Lilypad``
 
 A Swift library to capture touch events from a mac trackpad.
 

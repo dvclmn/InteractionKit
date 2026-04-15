@@ -1,6 +1,6 @@
 //
 //  TrackpadGuideView.swift
-//  LilyPad
+//  Lilypad
 //
 //  Created by Dave Coleman on 6/4/2026.
 //

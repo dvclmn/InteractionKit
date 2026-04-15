@@ -1,6 +1,6 @@
 //
 //  DrawingCanvas.swift
-//  LilyPadDemo
+//  LilypadDemo
 //
 
 import BasePrimitives

@@ -1,6 +1,6 @@
 //
 //  BrushStyle.swift
-//  LilyPadDemo
+//  LilypadDemo
 //
 
 import CoreGraphics

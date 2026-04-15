@@ -1,6 +1,6 @@
 //
 //  StrokePoint.swift
-//  LilyPadDemo
+//  LilypadDemo
 //
 
 import Foundation
