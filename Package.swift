@@ -23,13 +23,13 @@ let package = Package(
 
   targets: [
     .target(
+      name: "Lilypad",
+      dependencies: ["BasePrimitives"],
+    ),
+    .target(
       name: "PaintKit",
       dependencies: ["Lilypad"],
     ),
 
-    .target(
-      name: "Lilypad",
-      dependencies: ["BasePrimitives"],
-    ),
   ],
 )
